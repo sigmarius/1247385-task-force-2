@@ -6,21 +6,17 @@ class Task
 
     protected $currentStatus;
 
-    private const STATUSES = [
-        'new' => 'Новое',
-        'undo' => 'Отменено',
-        'active' => 'В работе',
-        'done' => 'Выполнено',
-        'fail' => 'Провалено'
-    ];
+    const STATUS_NEW = 'new';
+    const STATUS_UNDO = 'undo';
+    const STATUS_ACTIVE = 'active';
+    const STATUS_DONE = 'done';
+    const STATUS_FAIL = 'fail';
 
-    private const ACTIONS = [
-        'clientCreate' => 'Задание опубликовано, исполнитель ещё не найден',
-        'clientCancel' => 'Заказчик отменил задание', 
-        'workerAccept' => 'Заказчик выбрал исполнителя для задания', 
-        'clientApprove' => 'Заказчик отметил задание как выполненное', 
-        'workerReject' => 'Исполнитель отказался от выполнения задания'
-    ];
+    const ACTION_CREATE = 'clientCreate';
+    const ACTION_CANCEL = 'clientCancel';
+    const ACTION_ACCEPT = 'workerAccept';
+    const ACTION_APPROVE = 'clientApprove';
+    const ACTION_REJECT = 'workerReject';
 
     public function __construct(int $customerId, int $workerId)
     {
@@ -28,50 +24,51 @@ class Task
         $this->workerId = $workerId;
     }
 
-    public function getAvailableActions(string $status)
-    {
-        $availableActions = [];
-
-        switch ($status) {
-            case 'new':
-                $availableActions = [
-                    implode(array_keys(self::ACTIONS, self::ACTIONS['clientCancel'])), 
-                    implode(array_keys(self::ACTIONS, self::ACTIONS['workerAccept']))
-                ];
-                break;
-            case 'active':
-                $availableActions = [
-                    implode(array_keys(self::ACTIONS, self::ACTIONS['clientApprove'])), 
-                    implode(array_keys(self::ACTIONS, self::ACTIONS['workerReject']))
-                ];
-                break;
-            default:
-            return 'Для данного статуса доступных действий не предусмотрено';
-        }
-
-        return $availableActions;
-    }
-
-    public function getCurrentStatus(string $action)
-    {
-        if (!array_key_exists($action, self::ACTIONS)) {
-            return 'Действие не предусмотрено в системе';
-        }
-
-        $actionKey = array_search($action, array_keys(self::ACTIONS));
-
-        $this->currentStatus = array_keys(self::STATUSES)[$actionKey];
-
-        return $this->currentStatus;
-    }
-
     public function getStatusesMap()
     {
-        return self::STATUSES;
+        return [
+            self::STATUS_NEW => 'Новое',
+            self::STATUS_UNDO => 'Отменено',
+            self::STATUS_ACTIVE => 'В работе',
+            self::STATUS_DONE => 'Выполнено',
+            self::STATUS_FAIL => 'Провалено'
+        ];
     }
 
     public function getActionsMap()
     {
-        return self::ACTIONS;
+        return [
+            self::ACTION_CREATE => 'Задание опубликовано, исполнитель ещё не найден',
+            self::ACTION_CANCEL => 'Заказчик отменил задание', 
+            self::ACTION_ACCEPT => 'Заказчик выбрал исполнителя для задания', 
+            self::ACTION_APPROVE => 'Заказчик отметил задание как выполненное', 
+            self::ACTION_REJECT => 'Исполнитель отказался от выполнения задания'
+        ];
+    }
+
+    public function getAvailableActions(string $status)
+    {
+        switch ($status) {
+            case 'new':
+                return [self::ACTION_CANCEL, self::ACTION_ACCEPT];
+            case 'active':
+                return [self::ACTION_APPROVE, self::ACTION_REJECT];
+            default:
+                throw new Exception('Для данного статуса доступных действий не предусмотрено');
+        }
+    }
+
+    public function getCurrentStatus(string $action)
+    {
+        $statuses = $this->getStatusesMap();
+        $actions = $this->getActionsMap();
+
+        if (!array_key_exists($action, $actions)) {
+            throw new Exception('Действие не предусмотрено в системе');
+        }
+
+        $actionKey = array_search($action, array_keys($actions));
+
+        return $this->currentStatus = array_keys($statuses)[$actionKey]; 
     }
 }
