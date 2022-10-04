@@ -1,7 +1,7 @@
 # Личный проект «TaskForce»
 
 * Студент: [Анастасия Плешанова](https://up.htmlacademy.ru/yii/2/user/1247385).
-* Наставник: [Никита Зарубин](https://htmlacademy.ru/profile/id1385885).
+* Наставник: [Андрей Пилипенко](https://htmlacademy.ru/profile/id93207).
 
 ---
 
