@@ -1,4 +1,6 @@
 <?php
+namespace Taskforce\logic;
+
 class Task
 {
     protected $clientId;
