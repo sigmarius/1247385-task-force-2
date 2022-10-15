@@ -1,6 +1,6 @@
 <?php
-use Taskforce\logic\Task;
 require_once 'vendor/autoload.php';
+use Taskforce\logic\Task;
 
 $task = new Task(0, 0);
 
