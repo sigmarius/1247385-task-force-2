@@ -4,19 +4,18 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionStart extends Action
+class ActionFinish extends BaseAction
 {
-
-    protected string $actionName = 'Принять отклик';
-    protected string $actionCode = Task::ACTION_START;
+    protected string $actionName = 'Завершить задание';
+    protected string $actionCode = Task::ACTION_FINISH;
 
     public static function checkAccess(Task $task, int $userId): bool
     {
-        if ($task->getCurrentStatus() !== $task::STATUS_NEW) {
+        if ($task->getCurrentStatus() !== $task::STATUS_ACTIVE) {
             return false;
         }
 
-        if ($task->getWorkerId() !== 0) {
+        if ($userId === $task->getWorkerId()) {
             return false;
         }
 

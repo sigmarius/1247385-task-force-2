@@ -4,9 +4,10 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionFinish extends Action
+class ActionReject extends BaseAction
 {
-    protected string $actionName = 'Завершить задание';
+
+    protected string $actionName = 'Отказаться от задания';
     protected string $actionCode = Task::ACTION_FINISH;
 
     public static function checkAccess(Task $task, int $userId): bool
@@ -15,10 +16,6 @@ class ActionFinish extends Action
             return false;
         }
 
-        if ($userId === $task->getWorkerId()) {
-            return false;
-        }
-
-        return $userId === $task->getClientId();
+        return $userId === $task->getWorkerId();
     }
 }
