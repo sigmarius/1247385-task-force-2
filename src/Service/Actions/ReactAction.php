@@ -4,7 +4,7 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionReact extends BaseAction
+class ReactAction extends BaseAction
 {
 
     protected string $actionName = 'Откликнуться на задание';

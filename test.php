@@ -1,11 +1,11 @@
 <?php
 require_once 'vendor/autoload.php';
 use Taskforce\Logic\Task;
-use Taskforce\Service\Actions\ActionCancel;
-use Taskforce\Service\Actions\ActionReact;
-use Taskforce\Service\Actions\ActionStart;
-use Taskforce\Service\Actions\ActionFinish;
-use Taskforce\Service\Actions\ActionReject;
+use Taskforce\Service\Actions\CancelAction;
+use Taskforce\Service\Actions\ReactAction;
+use Taskforce\Service\Actions\StartAction;
+use Taskforce\Service\Actions\FinishAction;
+use Taskforce\Service\Actions\RejectAction;
 
 function checkStatusNew() {
     // проверка со стороны клиента
@@ -14,7 +14,7 @@ function checkStatusNew() {
     $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
 
     $actions = $task->getAvailableActions($userId);
-    if ([new ActionCancel(), new ActionStart()] != $actions) {
+    if ([new CancelAction(), new StartAction()] != $actions) {
         echo "Ожидается, что из статуса new для заказчика доступны только действия clientCancel и clientStart";
     }
 
@@ -24,7 +24,7 @@ function checkStatusNew() {
     $task = new Task($clientId, $workerId); // создали задачу со статусом new по дефолту
 
     $actions = $task->getAvailableActions($userId);
-    if ([new ActionReact()] != $actions) {
+    if ([new ReactAction()] != $actions) {
         echo "Ожидается, что из статуса new для исполнителя доступны только действия ActionReact";
     }
 }
@@ -73,7 +73,7 @@ function checkStatusActive() {
     }
 
     $actions = $task->getAvailableActions($userId);
-    if ([new ActionFinish()] != $actions) {
+    if ([new FinishAction()] != $actions) {
         echo "Ожидается, что из статуса active для заказчика доступны только действия clientFinish";
     }
 
@@ -88,7 +88,7 @@ function checkStatusActive() {
     }
 
     $actions = $task->getAvailableActions($userId);
-    if ([new ActionReject()] != $actions) {
+    if ([new RejectAction()] != $actions) {
         echo "Ожидается, что из статуса active для исполнителя доступны только действия ActionReject";
     }
 }

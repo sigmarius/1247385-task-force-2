@@ -4,7 +4,7 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionReject extends BaseAction
+class RejectAction extends BaseAction
 {
 
     protected string $actionName = 'Отказаться от задания';

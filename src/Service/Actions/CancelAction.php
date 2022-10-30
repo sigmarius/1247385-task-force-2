@@ -4,7 +4,7 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionCancel extends BaseAction
+class CancelAction extends BaseAction
 {
 
     protected string $actionName = 'Отменить задание';

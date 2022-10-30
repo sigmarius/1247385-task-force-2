@@ -4,7 +4,7 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionFinish extends BaseAction
+class FinishAction extends BaseAction
 {
     protected string $actionName = 'Завершить задание';
     protected string $actionCode = Task::ACTION_FINISH;
@@ -12,10 +12,6 @@ class ActionFinish extends BaseAction
     public static function checkAccess(Task $task, int $userId): bool
     {
         if ($task->getCurrentStatus() !== $task::STATUS_ACTIVE) {
-            return false;
-        }
-
-        if ($userId === $task->getWorkerId()) {
             return false;
         }
 

@@ -1,11 +1,11 @@
 <?php
 namespace Taskforce\Logic;
 
-use Taskforce\Service\Actions\ActionCancel;
-use Taskforce\Service\Actions\ActionFinish;
-use Taskforce\Service\Actions\ActionReact;
-use Taskforce\Service\Actions\ActionReject;
-use Taskforce\Service\Actions\ActionStart;
+use Taskforce\Service\Actions\CancelAction;
+use Taskforce\Service\Actions\FinishAction;
+use Taskforce\Service\Actions\ReactAction;
+use Taskforce\Service\Actions\RejectAction;
+use Taskforce\Service\Actions\StartAction;
 
 class Task
 {
@@ -74,24 +74,24 @@ class Task
     {
         $availableActions = [];
 
-        if (ActionCancel::checkAccess($this, $userId)) {
-            $availableActions[] = new ActionCancel();
+        if (CancelAction::checkAccess($this, $userId)) {
+            $availableActions[] = new CancelAction();
         }
 
-        if (ActionStart::checkAccess($this, $userId)) {
-            $availableActions[] = new ActionStart();
+        if (StartAction::checkAccess($this, $userId)) {
+            $availableActions[] = new StartAction();
         }
 
-        if (ActionFinish::checkAccess($this, $userId)) {
-            $availableActions[] = new ActionFinish();
+        if (FinishAction::checkAccess($this, $userId)) {
+            $availableActions[] = new FinishAction();
         }
 
-        if (ActionReject::checkAccess($this, $userId)) {
-            $availableActions[] = new ActionReject();
+        if (RejectAction::checkAccess($this, $userId)) {
+            $availableActions[] = new RejectAction();
         }
 
-        if (ActionReact::checkAccess($this, $userId)) {
-            $availableActions[] = new ActionReact();
+        if (ReactAction::checkAccess($this, $userId)) {
+            $availableActions[] = new ReactAction();
         }
 
         return $availableActions;

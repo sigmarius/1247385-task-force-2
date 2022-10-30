@@ -4,7 +4,7 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-class ActionStart extends BaseAction
+class StartAction extends BaseAction
 {
 
     protected string $actionName = 'Принять отклик';

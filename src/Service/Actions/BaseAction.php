@@ -3,7 +3,7 @@ namespace Taskforce\Service\Actions;
 
 use Taskforce\Logic\Task;
 
-abstract class Action
+abstract class BaseAction
 {
     protected string $actionName;
     protected string $actionCode;
