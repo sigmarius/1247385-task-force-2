@@ -1,6 +1,7 @@
 <?php
 namespace Taskforce\Logic;
 
+use Taskforce\Exception\TaskException;
 use Taskforce\Service\Actions\CancelAction;
 use Taskforce\Service\Actions\FinishAction;
 use Taskforce\Service\Actions\ReactAction;
@@ -109,7 +110,7 @@ class Task
         unset($actions[$this::ACTION_REACT]);
 
         if (!array_key_exists($action, $actions)) {
-            throw new \Exception('Действие не предусмотрено в системе');
+            throw new TaskException('Действие не предусмотрено в системе');
         }
 
         $actionKey = array_search($action, array_keys($actions));
