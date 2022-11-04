@@ -6,6 +6,7 @@ use Taskforce\Service\Actions\ReactAction;
 use Taskforce\Service\Actions\StartAction;
 use Taskforce\Service\Actions\FinishAction;
 use Taskforce\Service\Actions\RejectAction;
+use Taskforce\Exception\TaskException;
 
 function checkStatusNew() {
     // проверка со стороны клиента
@@ -157,10 +158,24 @@ function checkStatusFail() {
     }
 }
 
+function checkStatusException() {
+    $clientId = 1;
+    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+
+    try {
+        $task->setCurrentStatus(['Some undefined action']);
+    } catch (TaskException $e) {
+        error_log('Неизвестное действие: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+    } catch (TypeError $e) {
+        error_log('Неправильно задан тип аргумента: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+    }
+}
+
 echo '<pre>';
 checkStatusNew();
 checkStatusUndo();
 checkStatusActive();
 checkStatusDone();
 checkStatusFail();
+checkStatusException();
 echo '</pre>';
