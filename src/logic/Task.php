@@ -1,7 +1,7 @@
 <?php
 namespace Taskforce\Logic;
 
-use Taskforce\Exception\TaskException;
+use Taskforce\Exceptions\TaskException;
 use Taskforce\Service\Actions\CancelAction;
 use Taskforce\Service\Actions\FinishAction;
 use Taskforce\Service\Actions\ReactAction;

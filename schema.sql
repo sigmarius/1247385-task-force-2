@@ -82,7 +82,8 @@ CREATE INDEX idx_name ON cities (name);
 
 CREATE TABLE categories (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL,
+  icon VARCHAR(20) NOT NULL
 );
 
 CREATE INDEX idx_name ON categories (name);
