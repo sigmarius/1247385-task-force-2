@@ -5,16 +5,22 @@ use Taskforce\Service;
 use Taskforce\Exceptions\SourceFileException;
 use Taskforce\Exceptions\FileFormatException;
 
-$loader = new Service\SqlFromCsvCreater(
+$categoriesLoader = new Service\SqlFromCsvCreater(
     '/data/categories.csv',
     ['name', 'icon']
 );
 
+$citiesLoader = new Service\SqlFromCsvCreater(
+    '/data/cities.csv',
+    ['name', 'latitude', 'longitude']
+);
+
 try {
-    $loader->createSqlFile();
+    $categoriesLoader->createSqlFile();
+    $citiesLoader->createSqlFile();
 } catch (SourceFileException $e) {
-    error_log("Не удалось обработать csv файл: " . $e->getMessage());
+    echo "Не удалось обработать csv файл: " . $e->getMessage();
 } catch (FileFormatException $e) {
-    error_log("Неверное расширение файла: " . $e->getMessage());
+    echo "Неверное расширение файла: " . $e->getMessage();
 }
 echo 'done!';

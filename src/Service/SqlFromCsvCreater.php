@@ -12,8 +12,6 @@ class SqlFromCsvCreater
 
     private array $columns = [];
 
-    private string $sqlFileName = '';
-
     public function __construct(string $csvFile, array $columns = [])
     {
         $this->csvFile = $_SERVER['DOCUMENT_ROOT'] . $csvFile;
@@ -70,22 +68,13 @@ class SqlFromCsvCreater
         $sqlFileName = $this->getFileName();
         $file = new \SplFileObject($sqlFileName . '.sql', 'w');
 
-        $sqlStrings = [];
         foreach ($data as $dataString) {
             $values = '"' . implode('","', $dataString) . '"';
 
             $string = 'INSERT INTO ' . $sqlFileName . ' (' . implode(",", $this->columns) .') '
-                        . 'VALUES (' . $values . ')';
+                        . 'VALUES (' . $values . ');' . PHP_EOL;
 
-            $text = trim($string, '\'');
-            var_dump($text);
-
-
-            $sqlStrings[] = [$text];
-        }
-
-        foreach ($sqlStrings as $string) {
-            $file->fputcsv($string, ',', '\'');
+            $file->fwrite($string);
         }
     }
 
