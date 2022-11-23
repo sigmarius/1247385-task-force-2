@@ -6,7 +6,7 @@ use Taskforce\Service\Actions\ReactAction;
 use Taskforce\Service\Actions\StartAction;
 use Taskforce\Service\Actions\FinishAction;
 use Taskforce\Service\Actions\RejectAction;
-use Taskforce\Exception\TaskException;
+use Taskforce\Exceptions\TaskException;
 
 function checkStatusNew() {
     // проверка со стороны клиента
