@@ -82,7 +82,7 @@ class SqlFromCsvCreater
         }
 
         $sqlFileName = $this->getFileName();
-        $file = new \SplFileObject($sqlFileName . '1.sql', 'w');
+        $file = new \SplFileObject($sqlFileName . '.sql', 'w');
 
         foreach ($data as $dataString) {
             $values = '"' . implode('","', $dataString) . '"';
