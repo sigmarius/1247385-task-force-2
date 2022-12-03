@@ -2,6 +2,8 @@
 namespace Taskforce\Service;
 
 use Taskforce\Exceptions;
+use Taskforce\Exceptions\SourceFileException;
+use Taskforce\Exceptions\FileFormatException;
 
 class SqlFromCsvCreater
 {
@@ -14,7 +16,9 @@ class SqlFromCsvCreater
 
     public function __construct(string $csvFile, array $columns = [])
     {
-        $this->csvFile = $_SERVER['DOCUMENT_ROOT'] . $csvFile;
+        $rootPath = dirname(__DIR__, 2);
+
+        $this->csvFile = $rootPath . $csvFile;
         $this->columns = $columns;
     }
 
@@ -64,7 +68,19 @@ class SqlFromCsvCreater
 
     public function createSqlFile(): void
     {
-        $data = $this->importCsv();
+        try {
+            $data = $this->importCsv();
+        } catch (SourceFileException $e) {
+            echo "Не удалось обработать csv файл: " . $e->getMessage();
+            return;
+        } catch (FileFormatException $e) {
+            echo "Неверное расширение файла: " . $e->getMessage();
+            return;
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return;
+        }
+
         $sqlFileName = $this->getFileName();
         $file = new \SplFileObject($sqlFileName . '.sql', 'w');
 

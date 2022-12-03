@@ -538,7 +538,7 @@ template {
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
-  height: 59px;
+  min-height: 59px;
   border-bottom: 1px solid #d6d6d6;
   padding: 15px 12px; }
 
@@ -615,6 +615,7 @@ template {
 
 .user-name {
   position: relative;
+  margin-top: 1rem;
   font-weight: 700;
   padding-right: 45px;
   padding-left: 12px;
