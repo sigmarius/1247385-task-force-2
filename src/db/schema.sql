@@ -20,10 +20,12 @@ CREATE INDEX idx_date_created ON users (date_created);
 
 CREATE TABLE tasks (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  description VARCHAR(255) NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
   price INT NOT NULL,
-  expired_at DATETIME DEFAULT (now()),
-  current_status VARCHAR(255),
+  published_at DATETIME DEFAULT (now()),
+  expired_at DATETIME,
+  current_status VARCHAR(255) NOT NULL,
   category_id INT NOT NULL,
   client_id INT NOT NULL,
   worker_id INT NOT NULL,
@@ -31,7 +33,7 @@ CREATE TABLE tasks (
 );
 
 CREATE INDEX idx_price ON tasks (price);
-CREATE INDEX idx_expired_at ON tasks (expired_at);
+CREATE INDEX idx_published_at ON tasks (published_at);
 CREATE INDEX idx_current_status ON tasks (current_status);
 CREATE INDEX idx_category_id ON tasks (category_id);
 CREATE INDEX idx_worker_id ON tasks (worker_id);
@@ -60,7 +62,7 @@ CREATE INDEX idx_date_created ON feedbacks (date_created);
 
 CREATE TABLE files (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  file_path VARCHAR(255)
+  file_path VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE task_files (
