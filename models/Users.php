@@ -19,8 +19,8 @@ use Yii;
  * @property Cities $city
  * @property Feedbacks[] $feedbacks
  * @property Reactions[] $reactions
- * @property Tasks[] $tasks
- * @property Tasks[] $tasks0
+ * @property Tasks[] $clientTasks
+ * @property Tasks[] $workerTasks
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -109,7 +109,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks()
+    public function getClientTasks()
     {
         return $this->hasMany(Tasks::class, ['client_id' => 'id']);
     }
@@ -119,7 +119,7 @@ class Users extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getTasks0()
+    public function getWorkerTasks()
     {
         return $this->hasMany(Tasks::class, ['worker_id' => 'id']);
     }

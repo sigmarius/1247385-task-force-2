@@ -8,8 +8,10 @@ use Yii;
  * This is the model class for table "tasks".
  *
  * @property int $id
+ * @property string $title
  * @property string $description
  * @property int $price
+ * @property string|null $published_at
  * @property string|null $expired_at
  * @property string|null $current_status
  * @property int $category_id
@@ -41,10 +43,11 @@ class Tasks extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['description', 'price', 'category_id', 'client_id', 'worker_id', 'city_id'], 'required'],
+            [['title', 'description', 'price', 'category_id', 'client_id', 'worker_id', 'city_id'], 'required'],
             [['price', 'category_id', 'client_id', 'worker_id', 'city_id'], 'integer'],
             [['expired_at'], 'safe'],
-            [['description', 'current_status'], 'string', 'max' => 255],
+            [['title', 'current_status'], 'string', 'max' => 255],
+            [['description'], 'string'],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::class, 'targetAttribute' => ['city_id' => 'id']],
             [['category_id'], 'exist', 'skipOnError' => true, 'targetClass' => Categories::class, 'targetAttribute' => ['category_id' => 'id']],
             [['client_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['client_id' => 'id']],
@@ -59,8 +62,10 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'title' => 'Title',
             'description' => 'Description',
             'price' => 'Price',
+            'published_at' => 'Published At',
             'expired_at' => 'Expired At',
             'current_status' => 'Current Status',
             'category_id' => 'Category ID',
@@ -138,5 +143,10 @@ class Tasks extends \yii\db\ActiveRecord
     public function getWorker()
     {
         return $this->hasOne(Users::class, ['id' => 'worker_id']);
+    }
+
+    public function getPublishedTimePassed()
+    {
+        return Yii::$app->formatter->format($this->published_at, 'relativeTime');
     }
 }
