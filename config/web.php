@@ -50,7 +50,10 @@ $config = [
             'rules' => [
             ],
         ],
-
+        'formatter' => [
+            'dateFormat' => 'dd.MM.yyyy',
+            'locale' => 'ru-RU'
+        ]
     ],
 //    'controllerMap' => [
 //        'fixture' => [
