@@ -2,7 +2,10 @@
 
 namespace app\fixtures;
 
-class UsersFixture extends \yii\test\ActiveFixture
+use app\models\Users;
+use yii\test\ActiveFixture;
+
+class UsersFixture extends ActiveFixture
 {
-    public $modelClass = 'app\models\Users';
+    public $modelClass = Users::class;
 }

@@ -55,14 +55,6 @@ $config = [
             'locale' => 'ru-RU'
         ]
     ],
-//    'controllerMap' => [
-//        'fixture' => [
-//            'class' => 'yii\faker\FixtureController',
-//            'templatePath' => '@app/fixtures/templates',
-//            'fixtureDataPath' => '@app/fixtures/data',
-//            'namespace' => 'app/fixtures',
-//        ],
-//    ],
     'params' => $params,
 ];
 

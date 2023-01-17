@@ -2,7 +2,10 @@
 
 namespace app\fixtures;
 
-class TasksFixture extends \yii\test\ActiveFixture
+use app\models\Tasks;
+use yii\test\ActiveFixture;
+
+class TasksFixture extends ActiveFixture
 {
-    public $modelClass = 'app\models\Tasks';
+    public $modelClass = Tasks::class;
 }
