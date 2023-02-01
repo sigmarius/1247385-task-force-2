@@ -51,7 +51,7 @@ class TasksSearch extends Tasks
     public function calculateTimeDiff()
     {
         $now = new DateTime();
-        $now->modify("-$this->hoursPeriod hours");
+        $now->modify('-' . $this->hoursPeriod . 'hours');
 
         return $now->format( 'Y-m-d H:i:s');
     }
