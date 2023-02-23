@@ -2,17 +2,19 @@
 
 namespace Taskforce\Service\Actions;
 
-use Taskforce\Logic\Task;
+use Taskforce\Main\Task;
+use Taskforce\Main\TaskStatuses;
+use Taskforce\Main\TaskActions;
 
 class ReactAction extends BaseAction
 {
 
     protected string $actionName = 'Откликнуться на задание';
-    protected string $actionCode = Task::ACTION_REACT;
+    protected string $actionCode = TaskActions::ACTION_REACT;
 
     public static function checkAccess(Task $task, int $userId): bool
     {
-        if ($task->getCurrentStatus() !== $task::STATUS_NEW) {
+        if ($task->getCurrentStatus() !== TaskStatuses::STATUS_NEW) {
             return false;
         }
 

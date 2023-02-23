@@ -3,7 +3,7 @@
  * @var $faker \Faker\Generator
  * @var $index integer
  */
-use Taskforce\Logic\Task;
+use Taskforce\Main\Task;
 
 $task = new Task(1);
 $statuses = array_keys($task->getStatusesMap());

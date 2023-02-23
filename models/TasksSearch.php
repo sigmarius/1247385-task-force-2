@@ -5,7 +5,7 @@ namespace app\models;
 use DateTime;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use Taskforce\Logic\Task as TaskLogic;
+use Taskforce\Main\TaskStatuses;
 
 class TasksSearch extends Tasks
 {
@@ -58,7 +58,7 @@ class TasksSearch extends Tasks
     public function search($params)
     {
         $query = Tasks::find()
-            ->where(['current_status' => TaskLogic::STATUS_NEW])
+            ->where(['current_status' => TaskStatuses::STATUS_NEW])
             ->joinWith('city')
             ->joinWith('category')
             ->orderBy('published_at DESC');

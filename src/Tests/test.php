@@ -1,6 +1,5 @@
 <?php
-require_once 'vendor/autoload.php';
-use Taskforce\Logic\Task;
+use Taskforce\Main\Task;
 use Taskforce\Service\Actions\CancelAction;
 use Taskforce\Service\Actions\ReactAction;
 use Taskforce\Service\Actions\StartAction;
