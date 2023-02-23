@@ -3,10 +3,9 @@
  * @var $faker \Faker\Generator
  * @var $index integer
  */
-use Taskforce\Main\Task;
+use Taskforce\Main\TaskStatuses;
 
-$task = new Task(1);
-$statuses = array_keys($task->getStatusesMap());
+$statuses = array_keys(TaskStatuses::getStatusesMap());
 
 return [
     'title' => $faker->sentence(),
