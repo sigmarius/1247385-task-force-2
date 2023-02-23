@@ -17,6 +17,6 @@ return [
     'current_status' => $faker->randomElement($statuses),
     'category_id' => $faker->numberBetween(1, 8),
     'client_id' => $faker->numberBetween(1, 5),
-    'worker_id' => $faker->numberBetween(0, 5),
+    'worker_id' => $faker->optional()->randomDigit(),
     'city_id' => $faker->numberBetween(1, 500)
 ];
