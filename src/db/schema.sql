@@ -28,7 +28,7 @@ CREATE TABLE tasks (
   current_status VARCHAR(255) NOT NULL,
   category_id INT NOT NULL,
   client_id INT NOT NULL,
-  worker_id INT NOT NULL,
+  worker_id INT,
   city_id INT NOT NULL
 );
 
