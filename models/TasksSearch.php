@@ -35,8 +35,7 @@ class TasksSearch extends Tasks
                 return (int) $period;
             }],
             ['withoutWorker', 'boolean'],
-            ['withoutWorker', 'default', 'value' => true],
-
+            ['withoutWorker', 'default', 'value' => null],
         ];
     }
 
@@ -81,7 +80,7 @@ class TasksSearch extends Tasks
         }
 
         if ($this->withoutWorker) {
-            $query->andFilterWhere(['worker_id' => 0]);
+            $query->andWhere(['not', ['worker_id' => null]]);
         }
 
         return $dataProvider;
