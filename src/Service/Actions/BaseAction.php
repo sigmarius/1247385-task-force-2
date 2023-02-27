@@ -1,7 +1,7 @@
 <?php
 namespace Taskforce\Service\Actions;
 
-use Taskforce\Logic\Task;
+use Taskforce\Main\Task;
 
 abstract class BaseAction
 {

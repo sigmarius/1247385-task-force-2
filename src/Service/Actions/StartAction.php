@@ -2,21 +2,23 @@
 
 namespace Taskforce\Service\Actions;
 
-use Taskforce\Logic\Task;
+use Taskforce\Main\Task;
+use Taskforce\Main\TaskStatuses;
+use Taskforce\Main\TaskActions;
 
 class StartAction extends BaseAction
 {
 
     protected string $actionName = 'Принять отклик';
-    protected string $actionCode = Task::ACTION_START;
+    protected string $actionCode = TaskActions::ACTION_START;
 
     public static function checkAccess(Task $task, int $userId): bool
     {
-        if ($task->getCurrentStatus() !== $task::STATUS_NEW) {
+        if ($task->getCurrentStatus() !== TaskStatuses::STATUS_NEW) {
             return false;
         }
 
-        if ($task->getWorkerId() !== 0) {
+        if (!empty($task->getWorkerId())) {
             return false;
         }
 
