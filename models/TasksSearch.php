@@ -10,6 +10,11 @@ use Taskforce\Main\TaskStatuses;
 class TasksSearch extends Tasks
 {
     /**
+     * @var string $categoryId
+     */
+    public $categoryId;
+
+    /**
      * @var array
      */
     public $categories;
@@ -36,6 +41,7 @@ class TasksSearch extends Tasks
             }],
             ['withoutWorker', 'boolean'],
             ['withoutWorker', 'default', 'value' => null],
+            ['categoryId', 'default', 'value' => null]
         ];
     }
 
@@ -58,7 +64,6 @@ class TasksSearch extends Tasks
     public function search($params)
     {
         $query = Tasks::find()
-            ->where(['current_status' => TaskStatuses::STATUS_NEW])
             ->joinWith('city')
             ->joinWith('category')
             ->orderBy('published_at DESC');
@@ -66,6 +71,14 @@ class TasksSearch extends Tasks
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        if (empty($params['categoryId'])) {
+            $query->andFilterWhere(['current_status' => TaskStatuses::STATUS_NEW]);
+        } else {
+            $this->categoryId = $params['categoryId'];
+
+            $query->andFilterWhere(['category_id' => (int)$params['categoryId']]);
+        }
 
         // загружаем данные формы поиска и производим валидацию
         if (!($this->load($params) && $this->validate())) {

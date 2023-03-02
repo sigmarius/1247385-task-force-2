@@ -8,6 +8,7 @@ $config = [
     'basePath' => dirname(__DIR__),
     'language' => 'ru-RU',
     'bootstrap' => ['log'],
+    'defaultRoute' => 'tasks/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -49,12 +50,23 @@ $config = [
             'showScriptName' => false,
             'enableStrictParsing' => false,
             'rules' => [
+                'tasks/view/<id:\d+>' => 'tasks/view',
+                'user/view/<id:\d+>' => 'user/view',
+                'tasks/category/<categoryId:\d+>' => 'tasks/index',
             ],
         ],
         'formatter' => [
+            'class' => '\app\components\FormatterHelper',
             'dateFormat' => 'dd.MM.yyyy',
             'locale' => 'ru-RU'
-        ]
+        ],
+        'i18n' => [
+            'translations' => [
+                'app' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                ],
+            ],
+        ],
     ],
     'params' => $params,
 ];

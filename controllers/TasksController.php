@@ -3,14 +3,21 @@
 namespace app\controllers;
 
 use app\models\Categories;
+use app\models\Tasks;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use app\models\TasksSearch;
+use Yii;
+use yii\web\NotFoundHttpException;
 
 class TasksController extends Controller
 {
-    public function actionIndex()
+    public function actionIndex($categoryId = null)
     {
+        if (!empty($categoryId)) {
+            \Yii::$app->request->setBodyParams(['categoryId' => $categoryId]);
+        }
+
         $categories = Categories::find()->asArray()->all();
         $categories = ArrayHelper::map($categories, 'id', 'name');
 
@@ -18,6 +25,62 @@ class TasksController extends Controller
         $dataProvider = $searchModel->search(\Yii::$app->request->post());
 
         $tasks = $dataProvider->getModels();
+
+        // чтобы в форму прокидывалась категория для отображения чекбокса включенным, но работает и без этого
+//        if (!empty($categoryId)) {
+//            $searchModel->categories = [$categoryId];
+//        }
+
+        return $this->render('index', compact('searchModel','tasks', 'categories'));
+    }
+
+    public function actionView($id)
+    {
+        $task = Tasks::findOne((int)$id);
+
+        if (!$task) {
+            throw new NotFoundHttpException("Задание с ID $id не найдено");
+        }
+
+        $reactions = [];
+
+        foreach ($task->reactions as $key => $reaction) {
+            $feedbacksCount = $reaction->worker->getWorkerFeedbacks()->count();
+
+            $reactions[$key]['user_id'] = $reaction->worker->id;
+            $reactions[$key]['img'] = $reaction->worker->avatar->file_path;
+            $reactions[$key]['name'] = $reaction->worker->full_name;
+            $reactions[$key]['rating'] = floor($reaction->worker->workerRating);
+            $reactions[$key]['feedbacks_count'] = Yii::$app->i18n->format(
+                '{n, plural, =0{нет отзывов} =1{один отзыв} one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}',
+                ['n' => $feedbacksCount],
+                'ru_RU'
+            );
+            $reactions[$key]['comment'] = $reaction->comment;
+            $reactions[$key]['price'] = $reaction->worker_price;
+            $reactions[$key]['published'] = $reaction->getPublishedTimePassed();
+        }
+
+        return $this->render('view', compact('task', 'reactions'));
+    }
+
+    public function actionCategory($categoryId)
+    {
+        if (!empty($categoryId)) {
+            \Yii::$app->request->setBodyParams(['categoryId' => $categoryId]);
+        }
+
+        $categories = Categories::find()->asArray()->all();
+        $categories = ArrayHelper::map($categories, 'id', 'name');
+
+        $searchModel = new TasksSearch();
+        $dataProvider = $searchModel->search(\Yii::$app->request->post());
+
+        $tasks = $dataProvider->getModels();
+
+        if (!empty($categoryId)) {
+            $searchModel->categories = [$categoryId];
+        }
 
         return $this->render('index', compact('searchModel','tasks', 'categories'));
     }
