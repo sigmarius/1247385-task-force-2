@@ -52,7 +52,7 @@ $config = [
             'rules' => [
                 'tasks/view/<id:\d+>' => 'tasks/view',
                 'user/view/<id:\d+>' => 'user/view',
-                'tasks/category/<categoryId:\d+>' => 'tasks/index',
+                'tasks/category/<id:\d+>' => 'tasks/index',
             ],
         ],
         'formatter' => [

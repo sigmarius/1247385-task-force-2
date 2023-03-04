@@ -12,24 +12,15 @@ use yii\web\NotFoundHttpException;
 
 class TasksController extends Controller
 {
-    public function actionIndex($categoryId = null)
+    public function actionIndex($id = null)
     {
-        if (!empty($categoryId)) {
-            \Yii::$app->request->setBodyParams(['categoryId' => $categoryId]);
-        }
-
         $categories = Categories::find()->asArray()->all();
         $categories = ArrayHelper::map($categories, 'id', 'name');
 
         $searchModel = new TasksSearch();
-        $dataProvider = $searchModel->search(\Yii::$app->request->post());
+        $dataProvider = $searchModel->search(\Yii::$app->request->post(), $id);
 
         $tasks = $dataProvider->getModels();
-
-        // чтобы в форму прокидывалась категория для отображения чекбокса включенным, но работает и без этого
-//        if (!empty($categoryId)) {
-//            $searchModel->categories = [$categoryId];
-//        }
 
         return $this->render('index', compact('searchModel','tasks', 'categories'));
     }
@@ -62,26 +53,5 @@ class TasksController extends Controller
         }
 
         return $this->render('view', compact('task', 'reactions'));
-    }
-
-    public function actionCategory($categoryId)
-    {
-        if (!empty($categoryId)) {
-            \Yii::$app->request->setBodyParams(['categoryId' => $categoryId]);
-        }
-
-        $categories = Categories::find()->asArray()->all();
-        $categories = ArrayHelper::map($categories, 'id', 'name');
-
-        $searchModel = new TasksSearch();
-        $dataProvider = $searchModel->search(\Yii::$app->request->post());
-
-        $tasks = $dataProvider->getModels();
-
-        if (!empty($categoryId)) {
-            $searchModel->categories = [$categoryId];
-        }
-
-        return $this->render('index', compact('searchModel','tasks', 'categories'));
     }
 }

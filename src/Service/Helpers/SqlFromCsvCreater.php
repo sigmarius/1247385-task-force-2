@@ -1,5 +1,5 @@
 <?php
-namespace Taskforce\Service;
+namespace Taskforce\Service\Helpers;
 
 use Taskforce\Exceptions;
 use Taskforce\Exceptions\SourceFileException;

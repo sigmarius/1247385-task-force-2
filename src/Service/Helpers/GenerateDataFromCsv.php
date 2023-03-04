@@ -2,7 +2,7 @@
 
 namespace Taskforce\Service\Helpers;
 
-use Taskforce\Service\SqlFromCsvCreater;
+use Taskforce\Service\Helpers\SqlFromCsvCreater;
 
 class GenerateDataFromCsv
 {

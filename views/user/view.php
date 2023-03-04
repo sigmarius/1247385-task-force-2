@@ -34,7 +34,7 @@ $this->title = 'Taskforce';
                 <ul class="special-list">
                     <?php foreach ($userData['specialities'] as $speciality): ?>
                     <li class="special-item">
-                        <a href="<?= Url::to(['tasks/category', 'categoryId' => $speciality->id]) ?>" class="link link--regular">
+                        <a href="<?= Url::to(['tasks/category/' . $speciality->id]) ?>" class="link link--regular">
                             <?= $speciality->name; ?>
                         </a>
                     </li>
