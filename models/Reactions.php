@@ -11,6 +11,8 @@ use Yii;
  * @property int $worker_id
  * @property int $task_id
  * @property int $worker_price
+ * @property string|null $comment
+ * @property string $date_created
  *
  * @property Tasks $task
  * @property Users $worker
@@ -33,6 +35,8 @@ class Reactions extends \yii\db\ActiveRecord
         return [
             [['worker_id', 'task_id', 'worker_price'], 'required'],
             [['worker_id', 'task_id', 'worker_price'], 'integer'],
+            [['date_created'], 'safe'],
+            [['comment'], 'string', 'max' => 255],
             [['worker_id'], 'exist', 'skipOnError' => true, 'targetClass' => Users::class, 'targetAttribute' => ['worker_id' => 'id']],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::class, 'targetAttribute' => ['task_id' => 'id']],
         ];
@@ -69,5 +73,10 @@ class Reactions extends \yii\db\ActiveRecord
     public function getWorker()
     {
         return $this->hasOne(Users::class, ['id' => 'worker_id']);
+    }
+
+    public function getPublishedTimePassed()
+    {
+        return Yii::$app->formatter->format($this->date_created, 'relativeTime');
     }
 }

@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use Taskforce\Main\TaskStatuses;
 
 /**
  * This is the model class for table "tasks".
@@ -148,5 +149,16 @@ class Tasks extends \yii\db\ActiveRecord
     public function getPublishedTimePassed()
     {
         return Yii::$app->formatter->format($this->published_at, 'relativeTime');
+    }
+
+    public function getExpiredAtFormat()
+    {
+        return Yii::$app->formatter->asDate($this->expired_at, 'php:d F, H:i');
+    }
+
+    public function getStatusDescription()
+    {
+        $statuses = TaskStatuses::getStatusesMap();
+        return $statuses[$this->current_status];
     }
 }

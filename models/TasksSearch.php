@@ -55,10 +55,9 @@ class TasksSearch extends Tasks
         return $now->format( 'Y-m-d H:i:s');
     }
 
-    public function search($params)
+    public function search($params, $id)
     {
         $query = Tasks::find()
-            ->where(['current_status' => TaskStatuses::STATUS_NEW])
             ->joinWith('city')
             ->joinWith('category')
             ->orderBy('published_at DESC');
@@ -67,12 +66,21 @@ class TasksSearch extends Tasks
             'query' => $query,
         ]);
 
+        if (empty($id)) {
+            $query->andFilterWhere(['current_status' => TaskStatuses::STATUS_NEW]);
+        } else {
+            $this->categories[] = (int)$id;
+            $query->andFilterWhere(['in', 'category_id', $this->categories]);
+        }
+
         // загружаем данные формы поиска и производим валидацию
         if (!($this->load($params) && $this->validate())) {
             return $dataProvider;
         }
 
-        // изменяем запрос добавляя в его фильтрацию
+        // если данные формы загрузились, изменяем запрос добавляя в его фильтрацию
+        // сначала сбрасываем фильтр, заданный из параметра
+        $query->where(null);
         $query->andFilterWhere(['in', 'category_id', $this->categories]);
 
         if ($this->hoursPeriod) {

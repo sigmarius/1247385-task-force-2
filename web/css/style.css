@@ -736,6 +736,10 @@ template {
 .bio-info {
   margin-top: 10px; }
 
+.stars-rating {
+  display: flex;
+}
+
 .stars-rating span {
   position: relative; }
 
@@ -750,11 +754,11 @@ template {
   left: 0; }
 
 .big {
-  margin-right: 5px; }
+  margin-right: 10px; }
 
 .big span {
   padding-left: 11px;
-  padding-right: 11px; }
+  padding-right: 6px; }
 
 .big span::before {
   width: 25px;
@@ -763,7 +767,7 @@ template {
 .small span {
   margin-top: 5px;
   padding-left: 7px;
-  padding-right: 7px; }
+  padding-right: 3px; }
 
 .small span::before {
   background-size: 18px;
@@ -784,7 +788,9 @@ template {
   .response-card .feedback-wrapper:last-child {
     -webkit-box-flex: 1;
         -ms-flex-positive: 1;
-            flex-grow: 1; }
+            flex-grow: 1;
+            flex-shrink: 0;
+  }
 
 .customer-photo {
   border-bottom-left-radius: 15px;
@@ -962,10 +968,14 @@ template {
 
 .enumeration-item {
   margin-top: 31px;
-  margin-bottom: 25px; }
+  margin-bottom: 25px;
+  word-break: break-all;
+}
   .enumeration-item a {
     padding-left: 50px;
-    position: relative; }
+    position: relative;
+    display: inline-block;
+  }
   .enumeration-item a::after {
     position: absolute;
     content: "";

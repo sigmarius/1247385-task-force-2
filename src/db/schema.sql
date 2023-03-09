@@ -9,6 +9,11 @@ CREATE TABLE users (
   full_name VARCHAR(255) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
+  auth_key VARCHAR(255) NOT NULL,
+  birthdate DATETIME,
+  phone VARCHAR(11),
+  telegram VARCHAR(64),
+  about VARCHAR(255),
   city_id INT NOT NULL,
   avatar_id INT,
   date_created DATETIME DEFAULT (now())
@@ -43,7 +48,9 @@ CREATE TABLE reactions (
   id INT AUTO_INCREMENT PRIMARY KEY,
   worker_id INT NOT NULL,
   task_id INT NOT NULL,
-  worker_price INT NOT NULL
+  worker_price INT NOT NULL,
+  comment VARCHAR(255),
+  date_created DATETIME DEFAULT (now())
 );
 
 CREATE INDEX idx_task_id ON reactions (task_id);
@@ -51,6 +58,7 @@ CREATE INDEX idx_task_id ON reactions (task_id);
 CREATE TABLE feedbacks (
   id INT AUTO_INCREMENT PRIMARY KEY,
   client_id INT NOT NULL,
+  worker_id INT NOT NULL,
   task_id INT NOT NULL,
   comment VARCHAR(255),
   rating INT COMMENT 'от 1 до 5' NOT NULL,
@@ -67,8 +75,8 @@ CREATE TABLE files (
 
 CREATE TABLE task_files (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  task_id INT,
-  file_id INT
+  task_id INT NOT NULL,
+  file_id INT NOT NULL
 );
 
 CREATE INDEX idx_task_id ON task_files (task_id);
@@ -87,6 +95,15 @@ CREATE TABLE categories (
   name VARCHAR(255) NOT NULL,
   icon VARCHAR(20) NOT NULL
 );
+
+CREATE TABLE user_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    category_id INT NOT NULL
+);
+
+CREATE INDEX idx_category_id ON user_categories (category_id);
+CREATE INDEX idx_user_id ON user_categories (user_id);
 
 CREATE INDEX idx_name ON categories (name);
 
@@ -107,3 +124,6 @@ ALTER TABLE feedbacks ADD FOREIGN KEY (client_id) REFERENCES users (id);
 
 ALTER TABLE reactions ADD FOREIGN KEY (worker_id) REFERENCES users (id);
 ALTER TABLE reactions ADD FOREIGN KEY (task_id) REFERENCES tasks (id);
+
+ALTER TABLE user_categories ADD FOREIGN KEY (user_id) REFERENCES users (id);
+ALTER TABLE user_categories ADD FOREIGN KEY (category_id) REFERENCES categories (id);

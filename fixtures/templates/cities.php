@@ -7,7 +7,7 @@
 use Taskforce\Service\Helpers\GenerateDataFromCsv;
 
 $file = [
-    'path' => '/src/data/cities.csv',
+    'path' => '/data/cities.csv',
     'columns' => ['name', 'latitude', 'longitude']
 ];
 
@@ -20,10 +20,8 @@ try {
     echo "Превышено максимальное количество записей для данного набора данных - " . count($data['keys']) . PHP_EOL;
 }
 
-if (!empty($randomKey)) {
-    return [
-        'name' => $data['name'][$randomKey],
-        'latitude' => $data['latitude'][$randomKey],
-        'longitude' => $data['longitude'][$randomKey],
-    ];
-}
+return [
+    'name' => $data['name'][$randomKey],
+    'latitude' => $data['latitude'][$randomKey],
+    'longitude' => $data['longitude'][$randomKey],
+];
