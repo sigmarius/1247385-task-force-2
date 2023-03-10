@@ -38,18 +38,20 @@ class TasksController extends Controller
         foreach ($task->reactions as $key => $reaction) {
             $feedbacksCount = $reaction->worker->getWorkerFeedbacks()->count();
 
-            $reactions[$key]['user_id'] = $reaction->worker->id;
-            $reactions[$key]['img'] = $reaction->worker->avatar->file_path;
-            $reactions[$key]['name'] = $reaction->worker->full_name;
-            $reactions[$key]['rating'] = floor($reaction->worker->workerRating);
-            $reactions[$key]['feedbacks_count'] = Yii::$app->i18n->format(
-                '{n, plural, =0{нет отзывов} =1{один отзыв} one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}',
-                ['n' => $feedbacksCount],
-                'ru_RU'
-            );
-            $reactions[$key]['comment'] = $reaction->comment;
-            $reactions[$key]['price'] = $reaction->worker_price;
-            $reactions[$key]['published'] = $reaction->getPublishedTimePassed();
+            $reactions[$key] = [
+                'user_id' => $reaction->worker->id,
+                'img' => $reaction->worker->avatar->file_path,
+                'name' => $reaction->worker->full_name,
+                'rating' => floor($reaction->worker->workerRating),
+                'feedbacks_count' => Yii::$app->i18n->format(
+                    '{n, plural, =0{нет отзывов} =1{один отзыв} one{# отзыв} few{# отзыва} many{# отзывов} other{# отзывов}}',
+                    ['n' => $feedbacksCount],
+                    'ru_RU'
+                ),
+                'comment' => $reaction->comment,
+                'price' => $reaction->worker_price,
+                'published' => $reaction->getPublishedTimePassed(),
+            ];
         }
 
         return $this->render('view', compact('task', 'reactions'));
