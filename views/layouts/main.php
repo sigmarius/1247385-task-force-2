@@ -16,6 +16,11 @@ $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, 
 $this->registerMetaTag(['name' => 'description', 'content' => $this->params['meta_description'] ?? '']);
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
+
+// на будущее
+//$isGuest = Yii::$app->user->isGuest;
+
+$isRegisterPage = Yii::$app->controller->id === 'registration';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -50,7 +55,8 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             </ul>
         </div>
     </nav>
-    <div class="user-block">
+    <?php if(!$isRegisterPage): ?>
+        <div class="user-block">
         <a href="#">
             <img class="user-photo" src="/img/man-glasses.png" width="55" height="55" alt="Аватар">
         </a>
@@ -72,6 +78,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
             </div>
         </div>
     </div>
+    <?php endif; ?>
 </header>
 
 <?= $content ?>

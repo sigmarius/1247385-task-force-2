@@ -54,8 +54,8 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             [['full_name', 'email', 'password', 'city_id', 'auth_key'], 'required'],
+            [['full_name', 'email', 'password', 'city_id', 'auth_key', 'date_created', 'birthdate'], 'safe'],
             [['city_id', 'avatar_id'], 'integer'],
-            [['date_created', 'birthdate'], 'safe'],
             [['full_name', 'email', 'password', 'about'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 11],
             [['telegram'], 'string', 'max' => 64],
@@ -154,6 +154,10 @@ class Users extends ActiveRecord implements IdentityInterface
     public static function findByEmail($email)
     {
         return static::findOne(['email' => $email]);
+    }
+
+    public function generateSafePassword($password) {
+        $this->password = Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
