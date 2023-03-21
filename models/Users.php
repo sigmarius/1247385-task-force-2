@@ -36,6 +36,9 @@ use Taskforce\Main\TaskStatuses;
 
 class Users extends ActiveRecord implements IdentityInterface
 {
+    const SCENARIO_LOGIN = 'login';
+    const SCENARIO_REGISTER = 'register';
+
     const STATUS_FREE = 'Открыт для новых заказов';
     const STATUS_BUSY = 'Занят';
 
@@ -47,6 +50,16 @@ class Users extends ActiveRecord implements IdentityInterface
         return 'users';
     }
 
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+
+        $scenarios[self::SCENARIO_LOGIN] = ['email', 'password'];
+        $scenarios[self::SCENARIO_REGISTER] = ['full_name', 'email', 'password', 'city_id', '!password_repeat', '!is_worker'];
+
+        return $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -54,8 +67,6 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             [['full_name', 'email', 'password', 'city_id', 'auth_key'], 'required'],
-            [['full_name', 'email', 'password', 'city_id', 'auth_key', 'date_created', 'birthdate'], 'safe'],
-            [['city_id', 'avatar_id'], 'integer'],
             [['full_name', 'email', 'password', 'about'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 11],
             [['telegram'], 'string', 'max' => 64],

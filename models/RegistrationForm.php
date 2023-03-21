@@ -3,10 +3,16 @@
 namespace app\models;
 
 use yii\base\Model;
-use yii\db\ActiveRecord;
+use app\models\Users;
+use Yii;
 
-class RegistrationForm extends Users
+class RegistrationForm extends Model
 {
+    public $full_name;
+    public $email;
+    public $city_id;
+    public $password;
+
     public $password_repeat;
     public $is_worker;
 
@@ -25,14 +31,39 @@ class RegistrationForm extends Users
     public function rules()
     {
         return [
-            [['full_name', 'email', 'city_id', 'password', 'password_repeat', 'is_worker'], 'safe'],
             [['full_name', 'email', 'city_id', 'password', 'password_repeat'], 'required'],
             [['email'], 'email'],
-            [['email'], 'unique'],
             [['full_name'], 'string', 'min' => 3],
             [['password'], 'string', 'min' => 8],
             ['password', 'compare'],
-            [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => Cities::class, 'targetAttribute' => ['city_id' => 'id'], 'message' => 'Выберите город из списка'],
+            ['is_worker', 'boolean'],
+            ['is_worker', 'default', 'value' => null],
         ];
+    }
+
+    public function register()
+    {
+        if (!$this->validate()) {
+            return false;
+        }
+
+        $user = new Users();
+        $user->scenario = $user::SCENARIO_REGISTER;
+        $user->attributes = $this->attributes;
+
+        $user->generateSafePassword($this->password);
+        $user->generateAuthKey();
+
+        $user->save();
+
+        if ($user->save()) {
+            $role = empty($this->is_worker) ? 'client' : 'worker';
+
+            $auth = Yii::$app->authManager;
+            $userRole = $auth->getRole($role);
+            $auth->assign($userRole, $user->getId());
+        }
+
+        return $user->save();
     }
 }

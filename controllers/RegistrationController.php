@@ -16,21 +16,13 @@ class RegistrationController extends Controller
 
         $cities = Cities::getAllCityNames();
 
+//        Убедимся, что форма была отправлена
         if (Yii::$app->request->getIsPost()) {
+
+//            Загрузим в модель все данные из POST
             $model->load(Yii::$app->request->post());
 
-            if ($model->validate()) {
-                $model->generateSafePassword($model->password);
-                $model->generateAuthKey();
-
-                $model->save(false);
-
-                $role = empty($model->is_worker) ? 'client' : 'worker';
-
-                $auth = Yii::$app->authManager;
-                $userRole = $auth->getRole($role);
-                $auth->assign($userRole, $model->getId());
-
+            if ($model->register()) {
                 $this->goHome();
             }
         }
