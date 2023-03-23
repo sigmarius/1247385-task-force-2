@@ -33,6 +33,7 @@ class RegistrationForm extends Model
         return [
             [['full_name', 'email', 'city_id', 'password', 'password_repeat'], 'required'],
             [['email'], 'email'],
+            ['email', 'unique', 'targetClass' => Users::class],
             [['full_name'], 'string', 'min' => 3],
             [['password'], 'string', 'min' => 8],
             ['password', 'compare'],

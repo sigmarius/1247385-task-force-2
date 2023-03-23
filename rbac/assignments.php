@@ -28,4 +28,7 @@ return [
     39 => [
         'worker',
     ],
+    40 => [
+        'worker',
+    ],
 ];
