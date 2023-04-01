@@ -2,11 +2,14 @@
 
 /** @var yii\web\View $this */
 /** @var string $content */
+/** @var array $user */
 
 use app\assets\AppAsset;
+use app\models\Users;
 use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 
@@ -21,6 +24,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 //$isGuest = Yii::$app->user->isGuest;
 
 $isRegisterPage = Yii::$app->controller->id === 'registration';
+$user = Users::findIdentity(\Yii::$app->user->getId());
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -58,10 +62,10 @@ $isRegisterPage = Yii::$app->controller->id === 'registration';
     <?php if(!$isRegisterPage): ?>
         <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="/img/man-glasses.png" width="55" height="55" alt="Аватар">
+            <img class="user-photo" src="<?= $user->avatar->file_path; ?>" width="55" height="55" alt="<?= $user->full_name; ?>">
         </a>
         <div class="user-menu">
-            <p class="user-name">Василий</p>
+            <p class="user-name"><?= $user->full_name; ?></p>
             <div class="popup-head">
                 <ul class="popup-menu">
                     <li class="menu-item">
@@ -71,7 +75,7 @@ $isRegisterPage = Yii::$app->controller->id === 'registration';
                         <a href="#" class="link">Связаться с нами</a>
                     </li>
                     <li class="menu-item">
-                        <a href="#" class="link">Выход из системы</a>
+                        <a href="<?= Url::to(['tasks/logout']) ?>" class="link">Выход из системы</a>
                     </li>
 
                 </ul>

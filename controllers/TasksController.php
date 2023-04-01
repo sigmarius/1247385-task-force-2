@@ -4,13 +4,14 @@ namespace app\controllers;
 
 use app\models\Categories;
 use app\models\Tasks;
+use app\models\Users;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use app\models\TasksSearch;
 use Yii;
 use yii\web\NotFoundHttpException;
 
-class TasksController extends Controller
+class TasksController extends BaseAuthController
 {
     public function actionIndex($id = null)
     {
@@ -55,5 +56,12 @@ class TasksController extends Controller
         }
 
         return $this->render('view', compact('task', 'reactions'));
+    }
+
+    public function actionLogout()
+    {
+        \Yii::$app->user->logout();
+
+        return $this->goHome();
     }
 }
