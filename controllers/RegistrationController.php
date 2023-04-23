@@ -4,12 +4,29 @@ namespace app\controllers;
 
 use app\models\RegistrationForm;
 use Yii;
-use app\models\Users;
 use app\models\Cities;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class RegistrationController extends Controller
 {
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['?']
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function actionIndex()
     {
         $model = new RegistrationForm();

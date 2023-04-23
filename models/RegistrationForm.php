@@ -54,6 +54,7 @@ class RegistrationForm extends Model
 
         $user->generateSafePassword($this->password);
         $user->generateAuthKey();
+        $user->avatar_id = random_int(1, 10);
 
         $user->save();
 
