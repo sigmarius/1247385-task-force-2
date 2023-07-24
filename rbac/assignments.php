@@ -31,4 +31,10 @@ return [
     40 => [
         'worker',
     ],
+    42 => [
+        'worker',
+    ],
+    43 => [
+        'client',
+    ],
 ];

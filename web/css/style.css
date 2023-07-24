@@ -1397,6 +1397,7 @@ input[type=date] {
   margin-right: 50px; }
 
 .new-file {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -1418,6 +1419,23 @@ input[type=date] {
   background-image: url("../img/upload-icon.svg");
   background-position: center 25px;
   background-repeat: no-repeat; }
+
+.new-file input[type=file] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 999px;
+  text-align: right;
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
 
 input[type=submit] {
   border: none;
