@@ -15,7 +15,7 @@ $files = [
 ];
 
 foreach ($files as $file) {
-    $loader = new Service\SqlFromCsvCreater($file['path'], $file['columns']);
+    $loader = new Service\Helpers\SqlFromCsvCreater($file['path'], $file['columns']);
     $loader->createSqlFile();
 }
 

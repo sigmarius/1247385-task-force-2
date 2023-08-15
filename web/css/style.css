@@ -430,7 +430,9 @@ template {
 
 .head-main {
   font-size: 30px;
-  margin-bottom: 27px; }
+  line-height: 1.2;
+  margin-bottom: 27px;
+}
 
 .head-regular {
   font-size: 24px;
@@ -774,7 +776,7 @@ template {
   width: 18px;
   height: 28px; }
 
-.stars-rating .fill-star::before {
+.stars-rating .stars-rating__star--fill::before {
   background-image: url("../img/star-fill.svg"); }
 
 .response-card {

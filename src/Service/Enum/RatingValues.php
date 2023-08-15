@@ -1,6 +1,6 @@
 <?php
 
-namespace Taskforce\Main;
+namespace Taskforce\Service\Enum;
 
 enum RatingValues: int
 {

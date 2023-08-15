@@ -5,7 +5,7 @@ namespace app\models;
 use DateTime;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use Taskforce\Main\TaskStatuses;
+use Taskforce\Service\Task\TaskStatuses;
 
 class TasksSearch extends Tasks
 {
