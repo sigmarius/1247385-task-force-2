@@ -16,12 +16,7 @@ class TestController extends Controller
 {
     public function actionIndex()
     {
-        $categories = Categories::find()->all();
-
-        if (!$categories) {
-            throw new NotFoundHttpException('Нет записей в таблице');
-        }
-
-        return $this->render('index', ['categories' => $categories]);
+        $rootPath = dirname(__DIR__, 1);
+        require_once $rootPath . '/src/Tests/test.php';
     }
 }

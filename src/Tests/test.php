@@ -1,5 +1,5 @@
 <?php
-use Taskforce\Main\Task;
+use Taskforce\Service\Task\TaskService;
 use Taskforce\Service\Actions\CancelAction;
 use Taskforce\Service\Actions\ReactAction;
 use Taskforce\Service\Actions\StartAction;
@@ -7,174 +7,142 @@ use Taskforce\Service\Actions\FinishAction;
 use Taskforce\Service\Actions\RejectAction;
 use Taskforce\Exceptions\TaskException;
 
-function checkStatusNew() {
-    // проверка со стороны клиента
-    $userId = 1;
-    $clientId = 1;
-    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+$userRole = \Yii::$app->user->can('worker') ? 'worker' : 'client';
 
-    $actions = $task->getAvailableActions($userId);
-    if ([new CancelAction(), new StartAction()] != $actions) {
-        echo "Ожидается, что из статуса new для заказчика доступны только действия clientCancel и clientStart";
-    }
+echo 'user id: ' . \Yii::$app->user->identity->id . '<br>';
+echo 'user role: ' . $userRole . '<br>';
 
-    // проверка со стороны исполнителя
-    $userId = 2;
-    $workerId = 2;
-    $task = new Task($clientId, $workerId); // создали задачу со статусом new по дефолту
+function checkStatusNew($userRole) {
+    $taskId = 63;
+    $task = new TaskService($taskId);
+    $actions = array_column($task->getAvailableActions(), 'code');
 
-    $actions = $task->getAvailableActions($userId);
-    if ([new ReactAction()] != $actions) {
-        echo "Ожидается, что из статуса new для исполнителя доступны только действия ActionReact";
+    if ($userRole === 'worker') {
+        if ([
+            (new ReactAction())->getAvailableActions()['code']
+            ] !== $actions) {
+            echo "Ожидается, что из статуса new для исполнителя доступны только действия ActionReact<br>";
+        }
+    } else {
+        if ([
+                (new CancelAction())->getAvailableActions()['code'],
+                ( new StartAction())->getAvailableActions()['code']
+            ] !== $actions) {
+            echo "Ожидается, что из статуса new для заказчика доступны только действия clientCancel и clientStart <br>";
+        }
     }
 }
 
-function checkStatusUndo() {
-    // проверка со стороны клиента
-    $userId = 1;
-    $clientId = 1;
-    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+function checkStatusUndo($userRole) {
+    $taskId = 21;
+    $task = new TaskService($taskId);
 
-    $status = $task->setCurrentStatus('clientCancel');
+    $status = $task->setTaskStatus('clientCancel');
     if ($status !== 'undo') {
         echo "Действию clientCancel должен соответствовать статус undo, а не $status";
     }
 
-    $actions = $task->getAvailableActions($userId);
-    if ([] != $actions) {
-        echo "Ожидается, что из статуса undo для заказчика нет доступных действий";
-    }
+    $actions = array_column($task->getAvailableActions(), 'code');
 
-    // проверка со стороны исполнителя
-    $userId = 2;
-    $workerId = 2;
-    $task = new Task($clientId, $workerId); // создали задачу со статусом new по дефолту
-
-    $status = $task->setCurrentStatus('clientCancel');
-    if ($status !== 'undo') {
-        echo "Действию clientCancel должен соответствовать статус undo, а не $status";
-    }
-
-    $actions = $task->getAvailableActions($userId);
-    if ([] != $actions) {
-        echo "Ожидается, что из статуса undo для исполнителя нет доступных действий";
+    if ($userRole === 'worker') {
+        if ([] != $actions) {
+            echo "Ожидается, что из статуса undo для исполнителя нет доступных действий";
+        }
+    } else {
+        if ([] !== $actions) {
+            echo "Ожидается, что из статуса undo для заказчика нет доступных действий";
+        }
     }
 }
 
-function checkStatusActive() {
-    // проверка со стороны клиента
-    $userId = 1;
-    $clientId = 1;
-    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+function checkStatusActive($userRole) {
+    $taskId = 10;
+    $task = new TaskService($taskId);
 
-    $status = $task->setCurrentStatus('clientStart');
+    $status = $task->setTaskStatus('clientStart');
     if ($status !== 'active') {
         echo "Действию clientStart должен соответствовать статус active, а не $status";
     }
 
-    $actions = $task->getAvailableActions($userId);
-    if ([new FinishAction()] != $actions) {
-        echo "Ожидается, что из статуса active для заказчика доступны только действия clientFinish";
-    }
+    $actions = array_column($task->getAvailableActions(), 'code');
 
-    // проверка со стороны исполнителя
-    $userId = 2;
-    $workerId = 2;
-    $task = new Task($clientId, $workerId); // создали задачу со статусом new по дефолту
-
-    $status = $task->setCurrentStatus('clientStart');
-    if ($status !== 'active') {
-        echo "Действию clientStart должен соответствовать статус active, а не $status";
-    }
-
-    $actions = $task->getAvailableActions($userId);
-    if ([new RejectAction()] != $actions) {
-        echo "Ожидается, что из статуса active для исполнителя доступны только действия ActionReject";
+    if ($userRole === 'worker') {
+        if ([
+                (new RejectAction())->getAvailableActions()['code']
+            ] !== $actions) {
+            echo "Ожидается, что из статуса active для исполнителя доступны только действия ActionReject<br>";
+        }
+    } else {
+        if ([
+                (new FinishAction())->getAvailableActions()['code']
+            ] !== $actions) {
+            echo "Ожидается, что из статуса active для заказчика доступны только действия clientFinish <br>";
+        }
     }
 }
 
-function checkStatusDone() {
-    // проверка со стороны клиента
-    $userId = 1;
-    $clientId = 1;
-    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+function checkStatusDone($userRole) {
+    $taskId = 2;
+    $task = new TaskService($taskId);
 
-    $status = $task->setCurrentStatus('clientFinish');
+    $status = $task->setTaskStatus('clientFinish');
     if ($status !== 'done') {
         echo "Действию clientFinish должен соответствовать статус done, а не $status";
     }
 
-    $actions = $task->getAvailableActions($userId);
-    if ([] != $actions) {
-        echo "Ожидается, что из статуса done для заказчика нет доступных действий";
-    }
+    $actions = array_column($task->getAvailableActions(), 'code');
 
-    // проверка со стороны исполнителя
-    $userId = 2;
-    $workerId = 2;
-    $task = new Task($clientId, $workerId); // создали задачу со статусом new по дефолту
-
-    $status = $task->setCurrentStatus('clientFinish');
-    if ($status !== 'done') {
-        echo "Действию clientFinish должен соответствовать статус undo, а не $status";
-    }
-
-    $actions = $task->getAvailableActions($userId);
-    if ([] != $actions) {
-        echo "Ожидается, что из статуса done для исполнителя нет доступных действий";
+    if ($userRole === 'worker') {
+        if ([] !== $actions) {
+            echo "Ожидается, что из статуса done для исполнителя нет доступных действий <br>";
+        }
+    } else {
+        if ([] !== $actions) {
+            echo "Ожидается, что из статуса done для заказчика нет доступных действий <br>";
+        }
     }
 }
 
-function checkStatusFail() {
-    // проверка со стороны клиента
-    $userId = 1;
-    $clientId = 1;
-    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+function checkStatusFail($userRole) {
+    $taskId = 5;
+    $task = new TaskService($taskId);
 
-    $status = $task->setCurrentStatus('workerReject');
+    $status = $task->setTaskStatus('workerReject');
     if ($status !== 'fail') {
         echo "Действию workerReject должен соответствовать статус fail, а не $status";
     }
 
-    $actions = $task->getAvailableActions($userId);
-    if ([] != $actions) {
-        echo "Ожидается, что из статуса fail для заказчика нет доступных действий";
-    }
+    $actions = array_column($task->getAvailableActions(), 'code');
 
-    // проверка со стороны исполнителя
-    $userId = 2;
-    $workerId = 2;
-    $task = new Task($clientId, $workerId); // создали задачу со статусом new по дефолту
-
-    $status = $task->setCurrentStatus('workerReject');
-    if ($status !== 'fail') {
-        echo "Действию workerReject должен соответствовать статус fail, а не $status";
-    }
-
-    $actions = $task->getAvailableActions($userId);
-    if ([] != $actions) {
-        echo "Ожидается, что из статуса fail для исполнителя нет доступных действий";
+    if ($userRole === 'worker') {
+        if ([] !== $actions) {
+            echo "Ожидается, что из статуса fail для исполнителя нет доступных действий <br>";
+        }
+    } else {
+        if ([] !== $actions) {
+            echo "Ожидается, что из статуса fail для заказчика нет доступных действий <br>";
+        }
     }
 }
 
 function checkStatusException() {
-    $clientId = 1;
-    $task = new Task($clientId); // создали задачу со статусом new и workerId = 0 по дефолту
+    $taskId = 63;
+    $task = new TaskService($taskId);
 
     try {
-        $task->setCurrentStatus(['Some undefined action']);
+        $task->setTaskStatus(['Some undefined action']);
     } catch (TaskException $e) {
-        error_log('Неизвестное действие: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        echo 'Неизвестное действие: ' . $e->getMessage() . "\n" . $e->getTraceAsString();
     } catch (TypeError $e) {
-        error_log('Неправильно задан тип аргумента: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+        echo 'Неправильно задан тип аргумента: ' . $e->getMessage() . "\n" . $e->getTraceAsString();
     }
 }
 
 echo '<pre>';
-checkStatusNew();
-checkStatusUndo();
-checkStatusActive();
-checkStatusDone();
-checkStatusFail();
-checkStatusException();
+checkStatusNew($userRole);
+checkStatusUndo($userRole);
+checkStatusActive($userRole);
+checkStatusDone($userRole);
+checkStatusFail($userRole);
+//checkStatusException();
 echo '</pre>';

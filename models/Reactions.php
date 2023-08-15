@@ -2,7 +2,9 @@
 
 namespace app\models;
 
+use Taskforce\Service\Enum\ReactionStatuses;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "reactions".
@@ -78,5 +80,42 @@ class Reactions extends \yii\db\ActiveRecord
     public function getPublishedTimePassed()
     {
         return Yii::$app->formatter->format($this->date_created, 'relativeTime');
+    }
+
+    public function setAcceptReactionStatus(int $reactionId): bool
+    {
+        $reaction = Reactions::findOne($reactionId);
+
+        if (!$reaction) {
+            throw new NotFoundHttpException("Отклик с ID $reactionId не найден");
+        }
+
+        $reaction->status = ReactionStatuses::Accept->value;
+
+        return $reaction->save(false);
+    }
+
+    public function setRejectReactionStatus(int $reactionId): bool
+    {
+        $reaction = Reactions::findOne($reactionId);
+
+        if (!$reaction) {
+            throw new NotFoundHttpException("Отклик с ID $reactionId не найден");
+        }
+
+        $reaction->status = ReactionStatuses::Reject->value;
+
+        return $reaction->save(false);
+    }
+
+    public function addWorkerReaction(object $params): bool
+    {
+        $this->worker_id = \Yii::$app->user->identity->id;
+        $this->task_id = $params->taskId;
+        $this->worker_price = $params->worker_price;
+        $this->comment = $params->comment;
+        $this->date_created = (new \DateTime('now', new \DateTimeZone('Europe/Moscow')))->format('Y-m-d H:i:s');
+
+        return $this->save();
     }
 }

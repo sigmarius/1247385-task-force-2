@@ -1,6 +1,6 @@
 <?php
 
-namespace Taskforce\Main;
+namespace Taskforce\Service\Task;
 
 class TaskActions
 {

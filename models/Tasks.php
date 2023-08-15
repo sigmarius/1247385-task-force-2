@@ -3,7 +3,8 @@
 namespace app\models;
 
 use Yii;
-use Taskforce\Main\TaskStatuses;
+use yii\web\NotFoundHttpException;
+use Taskforce\Service\Task\TaskStatuses;
 
 /**
  * This is the model class for table "tasks".
@@ -160,5 +161,16 @@ class Tasks extends \yii\db\ActiveRecord
     {
         $statuses = TaskStatuses::getStatusesMap();
         return $statuses[$this->current_status];
+    }
+
+    public static function getTaskByPrimary(int $id)
+    {
+        $task = Tasks::findOne($id);
+
+        if (!$task) {
+            throw new NotFoundHttpException("Задание с ID $id не найдено");
+        }
+
+        return $task;
     }
 }

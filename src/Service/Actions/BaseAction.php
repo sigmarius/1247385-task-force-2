@@ -1,7 +1,8 @@
 <?php
 namespace Taskforce\Service\Actions;
 
-use Taskforce\Main\Task;
+use app\models\Tasks;
+use Taskforce\Main\TaskService;
 
 abstract class BaseAction
 {
@@ -18,5 +19,5 @@ abstract class BaseAction
         return $this->actionCode;
     }
 
-    abstract public static function checkAccess(Task $task, int $userId) : bool;
+    abstract public static function checkAccess(Tasks $task, int $userId) : bool;
 }
