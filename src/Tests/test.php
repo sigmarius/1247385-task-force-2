@@ -13,7 +13,7 @@ echo 'user id: ' . \Yii::$app->user->identity->id . '<br>';
 echo 'user role: ' . $userRole . '<br>';
 
 function checkStatusNew($userRole) {
-    $taskId = 63;
+    $taskId = 48;
     $task = new TaskService($taskId);
     $actions = array_column($task->getAvailableActions(), 'code');
 
