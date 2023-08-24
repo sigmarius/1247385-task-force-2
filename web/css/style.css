@@ -1481,7 +1481,9 @@ form .has-error textarea:hover {
   min-height: 25px; }
 
 .location-icon {
-  background-image: url("../img/location-icon.svg");
+  width: 100% !important;
+  height: 20px !important;
+  background-image: url("../img/location-icon.svg") !important;
   background-repeat: no-repeat;
   background-size: 19px 24px;
   background-position: 630px 6px; }

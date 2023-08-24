@@ -35,6 +35,8 @@ class TasksController extends BaseAuthController
     {
         $task = Tasks::getTaskByPrimary((int)$id);
 
+        $taskMap = $this->getTaskMapCoordinates($task);
+
         $files = [];
         if (!empty($task->taskFiles)) {
             foreach ($task->taskFiles as $key => $file) {
@@ -105,10 +107,10 @@ class TasksController extends BaseAuthController
         );
 
         if ($isAjax) {
-            return $this->renderPartial('view', compact('task', 'reactions', 'files', 'displayReactions', 'actionsToDisplay'));
+            return $this->renderPartial('view', compact('task', 'reactions', 'files', 'displayReactions', 'actionsToDisplay', 'taskMap'));
         }
 
-        return $this->render('view', compact('task', 'reactions', 'files', 'displayReactions', 'actionsToDisplay'));
+        return $this->render('view', compact('task', 'reactions', 'files', 'displayReactions', 'actionsToDisplay', 'taskMap'));
     }
 
     public function actionClientStart()
@@ -252,6 +254,24 @@ class TasksController extends BaseAuthController
     protected function camelCaseToSnakeCase($string): string
     {
         return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $string));
+    }
+
+    protected function getTaskMapCoordinates(Tasks $task): array
+    {
+        $latitude = '';
+        $longitude = '';
+        if (!empty($task->latitude) && !empty($task->longitude)) {
+            $latitude = $task->latitude;
+            $longitude = $task->longitude;
+        } elseif (!empty($task->city_id)) {
+            $latitude =  $task->city->latitude;
+            $longitude =  $task->city->longitude;
+        }
+
+        return [
+            'latitude' => $latitude,
+            'longitude' => $longitude
+        ];
     }
 
     public function actionLogout()
