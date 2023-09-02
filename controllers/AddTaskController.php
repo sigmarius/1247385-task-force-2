@@ -49,19 +49,4 @@ class AddTaskController extends BaseAuthController
 
         return $this->render('index', compact('model', 'categories'));
     }
-
-    public function actionGetLocation()
-    {
-        if (Yii::$app->request->isAjax) {
-            $request = Yii::$app->request;
-            $query = $request->get('query');
-
-            $api = new Geocoder();
-            $response = $api->getCoordinates($query);
-
-            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-
-            return $response;
-        }
-    }
 }
