@@ -37,4 +37,22 @@ return [
     43 => [
         'client',
     ],
+    44 => [
+        'client',
+    ],
+    45 => [
+        'client',
+    ],
+    46 => [
+        'client',
+    ],
+    47 => [
+        'worker',
+    ],
+    52 => [
+        'client',
+    ],
+    53 => [
+        'client',
+    ],
 ];
