@@ -6,8 +6,11 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'language' => 'ru-RU',
-    'bootstrap' => ['log'],
-    'defaultRoute' => 'tasks/index',
+    'bootstrap' => [
+        'log',
+        \app\components\ConditionalRouting::class
+    ],
+    'defaultRoute' => 'login/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -72,6 +75,7 @@ $config = [
         'formatter' => [
             'class' => '\app\components\FormatterHelper',
             'dateFormat' => 'dd.MM.yyyy',
+            'defaultTimeZone' => 'Europe/Moscow',
             'locale' => 'ru-RU'
         ],
         'i18n' => [

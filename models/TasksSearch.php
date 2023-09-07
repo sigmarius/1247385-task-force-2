@@ -6,9 +6,12 @@ use DateTime;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use Taskforce\Service\Task\TaskStatuses;
+use yii\db\Query;
+use yii\helpers\ArrayHelper;
 
 class TasksSearch extends Tasks
 {
+    const PAGE_SIZE = 5;
     /**
      * @var array
      */
@@ -17,7 +20,12 @@ class TasksSearch extends Tasks
     /**
      * @var boolean
      */
-    public $withoutWorker;
+    public $remoteWork;
+
+    /**
+     * @var boolean
+     */
+    public $withoutReactions;
 
     /**
      * @var integer
@@ -34,8 +42,8 @@ class TasksSearch extends Tasks
             ['hoursPeriod', 'filter', 'filter' => function ($period) {
                 return (int) $period;
             }],
-            ['withoutWorker', 'boolean'],
-            ['withoutWorker', 'default', 'value' => null],
+            [['remoteWork', 'withoutReactions'], 'boolean'],
+            [['remoteWork', 'withoutReactions'], 'default', 'value' => null],
         ];
     }
 
@@ -57,18 +65,23 @@ class TasksSearch extends Tasks
 
     public function search($params, $id)
     {
+        $currentUserId = \Yii::$app->user->identity->id;
+        $currentUser = Users::findIdentity($currentUserId);
+
         $query = Tasks::find()
-            ->joinWith('city')
-            ->joinWith('category')
+            ->where(['current_status' => TaskStatuses::STATUS_NEW])
+            ->andWhere(['is', 'location', null])
+            ->orWhere(['in', 'city_id', $currentUser->city_id])
             ->orderBy('published_at DESC');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => self::PAGE_SIZE,
+            ],
         ]);
 
-        if (empty($id)) {
-            $query->andFilterWhere(['current_status' => TaskStatuses::STATUS_NEW]);
-        } else {
+        if (!empty($id)) {
             $this->categories[] = (int)$id;
             $query->andFilterWhere(['in', 'category_id', $this->categories]);
         }
@@ -79,16 +92,30 @@ class TasksSearch extends Tasks
         }
 
         // если данные формы загрузились, изменяем запрос добавляя в его фильтрацию
-        // сначала сбрасываем фильтр, заданный из параметра
-        $query->where(null);
-        $query->andFilterWhere(['in', 'category_id', $this->categories]);
+        if (!empty($id) && empty($this->categories)) {
+            $categories = Categories::find()->asArray()->all();
+            $this->categories = ArrayHelper::getColumn($categories, 'id');
+        }
+
+        // добавляем полученные из формы категории к запросу
+        $query->orFilterWhere(['in', 'category_id', $this->categories]);
 
         if ($this->hoursPeriod) {
             $query->andFilterWhere(['>=', 'published_at', $this->calculateTimeDiff()]);
         }
 
-        if ($this->withoutWorker) {
-            $query->andWhere(['not', ['worker_id' => null]]);
+        if ($this->remoteWork) {
+            $query->andWhere(['is', 'location', null]);
+            // сбросили фильтр по id города
+            $query->orFilterWhere(['in', 'city_id', null]);
+        }
+
+        if ($this->withoutReactions) {
+            $subQuery = (new Query())
+                ->select('id')
+                ->from('reactions')
+                ->where('tasks.id = reactions.id');
+            $query->andWhere(['not exists', $subQuery]);
         }
 
         return $dataProvider;

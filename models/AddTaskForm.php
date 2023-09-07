@@ -46,7 +46,8 @@ class AddTaskForm extends Model
             [['price'], 'integer', 'min' => 1],
             ['expired_at', 'date', 'format' => 'php:Y-m-d'],
             [['files'], 'file', 'maxFiles' => 4],
-            [['location', 'latitude', 'longitude'], 'safe'],
+            [['location', 'latitude', 'longitude'], 'string'],
+            [['location', 'latitude', 'longitude'], 'default', 'value' => null],
         ];
     }
 

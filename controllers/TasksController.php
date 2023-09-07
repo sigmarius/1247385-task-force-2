@@ -26,9 +26,7 @@ class TasksController extends BaseAuthController
         $searchModel = new TasksSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->post(), $id);
 
-        $tasks = $dataProvider->getModels();
-
-        return $this->render('index', compact('searchModel','tasks', 'categories'));
+        return $this->render('index', compact('searchModel','dataProvider', 'categories'));
     }
 
     public function actionView($id, $isAjax = false)

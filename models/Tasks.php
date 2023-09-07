@@ -152,7 +152,7 @@ class Tasks extends \yii\db\ActiveRecord
 
     public function getPublishedTimePassed()
     {
-        return Yii::$app->formatter->format($this->published_at, 'relativeTime');
+        return Yii::$app->formatter->asRelativeTime($this->published_at);
     }
 
     public function getExpiredAtFormat()
