@@ -13,7 +13,7 @@ $this->registerJsFile('https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js
 $this->registerJsFile('@web/js/autocomplit.js');
 ?>
 
-<section class="modal enter-form form-modal" id="auth-form-section">
+<section class="modal form-modal" id="auth-form-section">
     <h2 class="mb-3">Уточняющая информация:</h2>
     <?php $form = ActiveForm::begin([
         'id' => 'auth-form',
@@ -32,15 +32,22 @@ $this->registerJsFile('@web/js/autocomplit.js');
         ]
     ]); ?>
     <?= $form->field($model, 'location', [
-        'options' => [
-            'class' => 'mb-3',
-        ],
         'inputOptions' => [
             'id' => 'location',
             'class' => 'location'
         ]]); ?>
-    <?= $form->field($model, 'latitude', ['template' => "{input}"])->hiddenInput(['id' => 'latitude']) ?>
-    <?= $form->field($model, 'longitude', ['template' => "{input}"])->hiddenInput(['id' => 'longitude']) ?>
+    <?= $form->field($model, 'latitude', [
+            'template' => "{input}",
+            'options' => [
+                'class' => 'mb-0',
+            ],
+    ])->hiddenInput(['id' => 'latitude']) ?>
+    <?= $form->field($model, 'longitude', [
+            'template' => "{input}",
+            'options' => [
+                'class' => 'mb-0',
+            ],
+    ])->hiddenInput(['id' => 'longitude']) ?>
 
     <?= $form->field($model, 'is_worker', [
             'template' => "{label}\n{input}",

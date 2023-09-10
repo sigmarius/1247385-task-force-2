@@ -10,7 +10,7 @@ $config = [
         'log',
         \app\components\ConditionalRouting::class
     ],
-    'defaultRoute' => 'login/index',
+    'defaultRoute' => 'landing/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -57,7 +57,7 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
                 ],
             ],
         ],

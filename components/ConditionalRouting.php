@@ -8,7 +8,7 @@ class ConditionalRouting implements \yii\base\BootstrapInterface
      * @var array
      */
     public $guestRules = [
-        '' => 'login/index',
+        '' => 'landing/index',
     ];
 
     /**
