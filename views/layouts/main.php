@@ -20,12 +20,9 @@ $this->registerMetaTag(['name' => 'description', 'content' => $this->params['met
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 
-// на будущее
-//$isGuest = Yii::$app->user->isGuest;
-
-$isRegisterPage = Yii::$app->controller->id === 'registration';
 $user = Users::findIdentity(\Yii::$app->user->getId());
 ?>
+
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
@@ -45,7 +42,7 @@ $user = Users::findIdentity(\Yii::$app->user->getId());
         <div class="nav-wrapper">
             <ul class="nav-list">
                 <li class="list-item list-item--active">
-                    <a class="link link--nav" >Новое</a>
+                    <a class="link link--nav">Новое</a>
                 </li>
                 <li class="list-item">
                     <a href="#" class="link link--nav" >Мои задания</a>
@@ -56,22 +53,22 @@ $user = Users::findIdentity(\Yii::$app->user->getId());
                     </li>
                 <?php endif; ?>
                 <li class="list-item">
-                    <a href="#" class="link link--nav" >Настройки</a>
+                    <a href="<?= Url::to(['profile/settings']) ?>" class="link link--nav" >Настройки</a>
                 </li>
             </ul>
         </div>
     </nav>
-    <?php if(!$isRegisterPage): ?>
+    <?php if(!Yii::$app->user->isGuest): ?>
         <div class="user-block">
         <a href="#">
-            <img class="user-photo" src="<?= $user->avatar->file_path; ?>" width="55" height="55" alt="<?= $user->full_name; ?>">
+            <img class="user-photo" src="<?= $user->avatarPath; ?>" width="55" height="55" alt="<?= $user->full_name; ?>">
         </a>
         <div class="user-menu">
             <p class="user-name"><?= $user->full_name; ?></p>
             <div class="popup-head">
                 <ul class="popup-menu">
                     <li class="menu-item">
-                        <a href="#" class="link">Настройки</a>
+                        <a href="<?= Url::to(['profile/settings']) ?>" class="link">Настройки</a>
                     </li>
                     <li class="menu-item">
                         <a href="#" class="link">Связаться с нами</a>

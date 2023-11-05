@@ -2,12 +2,15 @@
 
 namespace app\models;
 
+use Taskforce\Service\Helpers\ImageHelper;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 use yii\web\IdentityInterface;
 use yii\base\NotSupportedException;
 use Taskforce\Service\Task\TaskStatuses;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "users".
@@ -32,6 +35,9 @@ use Taskforce\Service\Task\TaskStatuses;
  * @property Tasks[] $clientTasks
  * @property Tasks[] $workerTasks
  * @property UserCategories[] $userCategories
+ *
+ * @property Categories[] $specialities
+ * @property string $avatarPath
  */
 
 class Users extends ActiveRecord implements IdentityInterface
@@ -83,17 +89,18 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         return [
             'id' => 'ID',
-            'full_name' => 'Full Name',
+            'full_name' => 'Ваше имя',
             'email' => 'Email',
             'password' => 'Password',
             'city_id' => 'City ID',
             'avatar_id' => 'Avatar ID',
             'date_created' => 'Date Created',
             'auth_key' => 'Auth Key',
-            'birthdate' => 'Birthdate',
-            'phone' => 'Phone',
+            'birthdate' => 'День рождения',
+            'phone' => 'Номер телефона',
             'telegram' => 'Telegram',
-            'about' => 'About',
+            'about' => 'Информация о себе',
+            'specialities' => 'Выбор специализаций'
         ];
     }
 
@@ -341,5 +348,23 @@ class Users extends ActiveRecord implements IdentityInterface
         $uniqueKeys = array_unique(ArrayHelper::getColumn($userSpecialities, 'category_id'));
 
         return Categories::find()->where(['id' => $uniqueKeys])->all();
+    }
+
+    public function getAvatarPath(): string
+    {
+        $avatar = $this->avatar;
+
+        return empty($avatar)
+            ? ImageHelper::getEmptyUserAvatar()
+            : '/web/uploads/' . $avatar->file_path;
+    }
+
+    public static function findModel($id)
+    {
+        if (($model = self::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

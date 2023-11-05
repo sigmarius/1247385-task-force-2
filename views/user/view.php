@@ -1,10 +1,12 @@
 <?php
 
+use app\models\Users;
+use Taskforce\Service\Helpers\ImageHelper;
 use yii\helpers\Url;
 use \app\components\RatingStarsWidget;
 
 /** @var yii\web\View $this */
-/** @var object $user */
+/** @var Users $user */
 /** @var array $userData */
 
 $this->title = 'Taskforce';
@@ -15,7 +17,7 @@ $this->title = 'Taskforce';
         <h3 class="head-main"><?= $user->full_name; ?></h3>
         <div class="user-card">
             <div class="photo-rate">
-                <img class="card-photo" src="<?= $user->avatar->file_path; ?>" width="191" height="190" alt="Фото пользователя">
+                <img class="card-photo" src="<?= $user->avatarPath; ?>" width="191" height="190" alt="Фото пользователя">
                 <div class="card-rate">
                     <?= RatingStarsWidget::widget(['ratingValue' => $userData['rating'], 'ratingClass' => 'big'])?>
                     <span class="current-rate"><?= $userData['rating']; ?></span>
@@ -51,7 +53,7 @@ $this->title = 'Taskforce';
             <h4 class="head-regular">Отзывы заказчиков</h4>
             <?php foreach ($user->workerFeedbacks as $feedback): ?>
                 <div class="response-card">
-                    <img class="customer-photo" src="<?= $feedback->client->avatar->file_path?>" width="120" height="127" alt="<?= $feedback->client->full_name; ?>">
+                    <img class="customer-photo" src="<?= $feedback->client->avatarPath; ?>" width="120" height="127" alt="<?= $feedback->client->full_name; ?>">
                     <div class="feedback-wrapper">
                         <p class="feedback">
                             <?= $feedback->comment; ?>

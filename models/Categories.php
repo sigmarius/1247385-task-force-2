@@ -59,6 +59,11 @@ class Categories extends \yii\db\ActiveRecord
         return $this->hasMany(Tasks::class, ['category_id' => 'id']);
     }
 
+    /**
+     * Gets query for [[UserCategories]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
     public function getUserCategories()
     {
         return $this->hasMany(UserCategories::class, ['category_id' => 'id']);

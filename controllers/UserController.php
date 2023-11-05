@@ -3,17 +3,12 @@
 namespace app\controllers;
 
 use app\models\Users;
-use yii\web\Controller;
 use Yii;
 use yii\web\NotFoundHttpException;
 
-class UserController extends Controller
+
+class UserController extends BaseAuthController
 {
-    public function actionIndex()
-    {
-
-    }
-
     public function actionView($id)
     {
         $user = Users::findOne((int)$id);
