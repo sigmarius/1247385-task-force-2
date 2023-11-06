@@ -38,6 +38,10 @@ use yii\web\NotFoundHttpException;
  *
  * @property Categories[] $specialities
  * @property string $avatarPath
+ *
+ * If true, contacts are shown only to the customer
+ * @property boolean $is_private
+ * @property boolean $displayContacts
  */
 
 class Users extends ActiveRecord implements IdentityInterface
@@ -357,6 +361,15 @@ class Users extends ActiveRecord implements IdentityInterface
         return empty($avatar)
             ? ImageHelper::getEmptyUserAvatar()
             : '/web/uploads/' . $avatar->file_path;
+    }
+
+    public function getDisplayContacts(): bool
+    {
+        if (!$this->is_private) {
+            return true;
+        }
+
+        return $this->getWorkerTasks()->where(['client_id' => \Yii::$app->user->identity->id])->exists();
     }
 
     public static function findModel($id)

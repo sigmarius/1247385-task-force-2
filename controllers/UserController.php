@@ -2,9 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Tasks;
 use app\models\Users;
 use Yii;
+use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 
 
 class UserController extends BaseAuthController
@@ -12,8 +15,12 @@ class UserController extends BaseAuthController
     public function actionView($id)
     {
         $user = Users::findOne((int)$id);
+        $userRole = array_keys(Yii::$app->authManager->getRolesByUser($id));
 
-        if (!$user) {
+        if (
+            !$user
+            || !in_array('worker', $userRole)
+        ) {
             throw new NotFoundHttpException("Пользователь с ID $id не найден");
         }
 

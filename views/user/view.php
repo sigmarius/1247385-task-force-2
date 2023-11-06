@@ -84,23 +84,25 @@ $this->title = 'Taskforce';
                 <dd><?= $userData['status']; ?></dd>
             </dl>
         </div>
-        <div class="right-card white">
-            <h4 class="head-card">Контакты</h4>
-            <ul class="enumeration-list">
-                <?php if(!empty($user->phone)): ?>
+        <?php if($user->displayContacts): ?>
+            <div class="right-card white">
+                <h4 class="head-card">Контакты</h4>
+                <ul class="enumeration-list">
+                    <?php if(!empty($user->phone)): ?>
+                        <li class="enumeration-item">
+                            <a href="tel:<?= $userData['userPhone']; ?></a" class="link link--block link--phone"><?= $userData['userPhone']; ?></a>
+                        </li>
+                    <?php endif; ?>
                     <li class="enumeration-item">
-                        <a href="tel:<?= $userData['userPhone']; ?></a" class="link link--block link--phone"><?= $userData['userPhone']; ?></a>
+                        <a href="mailto:<?= $user->email; ?>" class="link link--block link--email"><?= $user->email; ?></a>
                     </li>
-                <?php endif; ?>
-                <li class="enumeration-item">
-                    <a href="mailto:<?= $user->email; ?>" class="link link--block link--email"><?= $user->email; ?></a>
-                </li>
-                <?php if(!empty($user->telegram)): ?>
-                <li class="enumeration-item">
-                    <a href="https://t.me/<?= $user->telegram; ?>" class="link link--block link--tg">@<?= $user->telegram; ?></a>
-                </li>
-                <?php endif; ?>
-            </ul>
-        </div>
+                    <?php if(!empty($user->telegram)): ?>
+                    <li class="enumeration-item">
+                        <a href="https://t.me/<?= $user->telegram; ?>" class="link link--block link--tg">@<?= $user->telegram; ?></a>
+                    </li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
     </div>
 </main>

@@ -28,8 +28,10 @@ class EditProfileForm extends Model
     public $specialities;
 
     public $oldPassword;
-    public $password;
-    public $password_repeat;
+    public $newPassword;
+    public $newPasswordRepeat;
+
+    public $is_private;
 
     /**
      * @var Users
@@ -50,6 +52,8 @@ class EditProfileForm extends Model
         $this->avatarPath = $user->avatarPath;
         $this->avatar_id = $user->avatar_id;
 
+        $this->is_private = $user->is_private;
+
         parent::__construct($config);
     }
 
@@ -57,7 +61,7 @@ class EditProfileForm extends Model
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_PROFILE_SETTINGS] = ['full_name', 'email', 'birthdate', 'phone', 'telegram', 'about', 'avatar_id', 'specialities', 'avatar'];
-        $scenarios[self::SCENARIO_SECURITY_SETTINGS] = ['oldPassword', 'password', 'password_repeat'];
+        $scenarios[self::SCENARIO_SECURITY_SETTINGS] = ['oldPassword', 'newPassword', 'newPasswordRepeat', 'is_private'];
 
         return $scenarios;
     }
@@ -69,7 +73,11 @@ class EditProfileForm extends Model
             'birthdate' => 'День рождения',
             'phone' => 'Номер телефона',
             'avatar' => 'Аватар',
-            'specialities' => 'Выбор специализаций'
+            'specialities' => 'Выбор специализаций',
+            'oldPassword' => 'Текущий пароль',
+            'newPassword' => 'Новый пароль',
+            'newPasswordRepeat' => 'Повторите пароль',
+            'is_private' => 'Показывать мои контакты только заказчику'
         ];
     }
 
@@ -79,8 +87,8 @@ class EditProfileForm extends Model
     public function rules()
     {
         return [
-            [['full_name', 'email', 'oldPassword', 'password', 'password_repeat'], 'required'],
-            [['full_name', 'email', 'password', 'about'], 'string', 'max' => 255],
+            [['full_name', 'email', 'oldPassword', 'newPassword', 'newPasswordRepeat'], 'required'],
+            [['full_name', 'email', 'newPassword', 'about'], 'string', 'max' => 255],
             [['phone'], 'string', 'max' => 11],
             [['telegram'], 'string', 'max' => 64],
             [['email'], 'email'],
@@ -94,10 +102,28 @@ class EditProfileForm extends Model
             ],
             ['avatar', 'file', 'mimeTypes' => 'image/*', 'extensions' => 'png, jpg'],
             ['specialities', 'exist', 'targetClass' => Categories::class, 'targetAttribute' => 'id', 'allowArray' => true],
-            [['password'], 'string', 'min' => 8],
-            ['password', 'compare'],
             ['birthdate', 'date', 'format' => 'php:d.m.Y'],
+
+            [['newPassword'], 'string', 'min' => 8],
+            ['newPasswordRepeat', 'compare', 'compareAttribute' => 'newPassword'],
+            // password is validated by validatePassword()
+            ['oldPassword', 'validateUserPassword'],
+            ['is_private', 'boolean'],
+            ['is_private', 'default', 'value' => null],
         ];
+    }
+
+    /**
+     * @param string $attribute
+     * @param array $params
+     */
+    public function validateUserPassword($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if (!\Yii::$app->security->validatePassword($this->oldPassword, $this->_user->password)) {
+                $this->addError($attribute, 'Не правильно введен текущий пароль');
+            }
+        }
     }
 
     public function upload(): bool
@@ -165,5 +191,22 @@ class EditProfileForm extends Model
 
             Yii::$app->db->createCommand()->batchInsert(UserCategories::tableName(), ['category_id', 'user_id'], $categoryRows)->execute();
         }
+    }
+
+    /**
+     * @return boolean
+     */
+    public function changePassword(): bool
+    {
+        if ($this->validate()) {
+            $user = $this->_user;
+            $user->generateSafePassword($this->newPassword);
+
+            $user->is_private = $this->is_private;
+
+            return $user->save();
+        }
+
+        return false;
     }
 }
