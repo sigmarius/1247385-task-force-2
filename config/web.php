@@ -70,6 +70,7 @@ $config = [
                 'tasks/view/<id:\d+>' => 'tasks/view',
                 'user/view/<id:\d+>' => 'user/view',
                 'tasks/category/<id:\d+>' => 'tasks/index',
+                'my-task/<status:[a-z]+>' => 'my-task/index'
             ],
         ],
         'formatter' => [

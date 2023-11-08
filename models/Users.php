@@ -358,8 +358,12 @@ class Users extends ActiveRecord implements IdentityInterface
     {
         $avatar = $this->avatar;
 
-        return empty($avatar)
-            ? ImageHelper::getEmptyUserAvatar()
+        if (empty($avatar)) {
+            return ImageHelper::getEmptyUserAvatar();
+        }
+
+        return str_starts_with($avatar->file_path, 'http')
+            ? $avatar->file_path
             : '/web/uploads/' . $avatar->file_path;
     }
 
