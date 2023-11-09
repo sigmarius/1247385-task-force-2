@@ -7,6 +7,7 @@ use app\models\Reactions;
 use app\models\Tasks;
 
 use Taskforce\Service\Enum\ReactionStatuses;
+use Taskforce\Service\Helpers\ImageHelper;
 use Taskforce\Service\Task\TaskService;
 use Taskforce\Service\Task\TaskActions;
 use Taskforce\Service\Task\TaskStatuses;
@@ -20,15 +21,12 @@ class TasksController extends BaseAuthController
 {
     public function actionIndex($id = null)
     {
-        $categories = Categories::find()->asArray()->all();
-        $categories = ArrayHelper::map($categories, 'id', 'name');
+        $categories = Categories::getAllCategoriesNames();
 
         $searchModel = new TasksSearch();
         $dataProvider = $searchModel->search(\Yii::$app->request->post(), $id);
 
-        $tasks = $dataProvider->getModels();
-
-        return $this->render('index', compact('searchModel','tasks', 'categories'));
+        return $this->render('index', compact('searchModel','dataProvider', 'categories'));
     }
 
     public function actionView($id, $isAjax = false)
@@ -80,7 +78,7 @@ class TasksController extends BaseAuthController
             $reactions[$key] = [
                 'id' => $reaction->id,
                 'user_id' => $reaction->worker->id,
-                'img' => $reaction->worker->avatar->file_path,
+                'img' => $reaction->worker->avatarPath,
                 'name' => $reaction->worker->full_name,
                 'rating' => floor($reaction->worker->workerRating),
                 'feedbacks_count' => Yii::$app->i18n->format(

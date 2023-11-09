@@ -18,7 +18,7 @@ use yii\helpers\Url;
 
 class LoginController extends Controller
 {
-    public $layout = 'landing';
+    public $layout = 'login';
 
     public function behaviors()
     {
@@ -35,6 +35,7 @@ class LoginController extends Controller
             ]
         ];
     }
+
 
     public function actions()
     {
@@ -69,16 +70,18 @@ class LoginController extends Controller
                 } else {
                     $fullName = ArrayHelper::getValue($attributes, 'first_name') . ' '. ArrayHelper::getValue($attributes, 'last_name');
 
-                    return Yii::$app->response->redirect([
-                        'login/register-social',
-                        'attributes' => [
-                            'client' => $attributes['client'],
-                            'id' => $attributes['id'],
-                            'email' => $attributes['email'],
-                            'full_name' => $fullName ?? 'Неопознанный Енот',
-                            'photo' => $attributes['photo']
-                        ]
-                    ]);
+                    $session = Yii::$app->session;
+                    $session->open();
+                    $session['userAttributes'] = [
+                        'client' => $attributes['client'],
+                        'id' => $attributes['id'],
+                        'email' => $attributes['email'],
+                        'full_name' => $fullName ?? 'Неопознанный Енот',
+                        'photo' => ArrayHelper::getValue($attributes, 'photo'),
+                        'birthdate' => ArrayHelper::getValue($attributes, 'bdate')
+                    ];
+
+                    return Yii::$app->getResponse()->redirect(['login/register-social']);
                 }
             }
         } else { // Пользователь уже зарегистрирован
@@ -116,7 +119,7 @@ class LoginController extends Controller
         return $this->render('index', compact('model'));
     }
 
-    public function actionRegisterSocial(array $attributes)
+    public function actionRegisterSocial()
     {
         $model = new RegisterSocialForm();
 
@@ -129,53 +132,8 @@ class LoginController extends Controller
                 return ActiveForm::validate($model);
             }
 
-            if ($model->validate()) {
-                $password = Yii::$app->security->generateRandomString(8);
-
-                $user = new Users([
-                    'full_name' => $attributes['full_name'],
-                    'email' => $attributes['email'],
-                ]);
-
-                $user->generateSafePassword($password);
-                $user->generateAuthKey();
-
-                $photo = ArrayHelper::getValue($attributes, 'photo');
-                if (!empty($photo)) {
-                    $avatar = new Files();
-                    $avatar->file_path = $photo;
-                    $result = $avatar->save();
-
-                    if ($result) {
-                        $user->avatar_id = $avatar->id;
-                    }
-                }
-
-                $user->city_id = $model->getCityId();
-
-                $transaction = $user->getDb()->beginTransaction();
-                if ($user->save()) {
-                    $role = $model->getUserRole();
-
-                    $auth = Yii::$app->authManager;
-                    $userRole = $auth->getRole($role);
-                    $auth->assign($userRole, $user->getId());
-
-                    $auth = new Auth([
-                        'user_id' => $user->id,
-                        'source' => $attributes['client'],
-                        'source_id' => (string)$attributes['id'],
-                    ]);
-                    if ($auth->save()) {
-                        $transaction->commit();
-                        Yii::$app->user->login($user);
-                        return $this->goHome();
-                    } else {
-                        print_r($auth->getErrors());
-                    }
-                } else {
-                    print_r($user->getErrors());
-                }
+            if ($model->register()) {
+                $this->goHome();
             }
         }
 

@@ -6,8 +6,11 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'language' => 'ru-RU',
-    'bootstrap' => ['log'],
-    'defaultRoute' => 'tasks/index',
+    'bootstrap' => [
+        'log',
+        \app\components\ConditionalRouting::class
+    ],
+    'defaultRoute' => 'landing/index',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -54,7 +57,7 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
                 ],
             ],
         ],
@@ -67,11 +70,13 @@ $config = [
                 'tasks/view/<id:\d+>' => 'tasks/view',
                 'user/view/<id:\d+>' => 'user/view',
                 'tasks/category/<id:\d+>' => 'tasks/index',
+                'my-task/<status:[a-z]+>' => 'my-task/index'
             ],
         ],
         'formatter' => [
             'class' => '\app\components\FormatterHelper',
             'dateFormat' => 'dd.MM.yyyy',
+            'defaultTimeZone' => 'Europe/Moscow',
             'locale' => 'ru-RU'
         ],
         'i18n' => [

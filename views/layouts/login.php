@@ -8,13 +8,12 @@ use Taskforce\Service\Enum\FlashTypes;
 
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
-$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
+$this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 
 $this->registerCssFile('/css/normalize.css');
-$this->registerCssFile('/css/style.css');
 $this->registerCssFile('/css/landing.css');
-$this->registerJsFile('/js/landing.js');
+$this->registerJsFile('/js/login.js');
 
 $this->title = 'TaskForce';
 ?>
@@ -60,12 +59,15 @@ $this->title = 'TaskForce';
                 <p>Работа там, где ты!</p>
             </div>
             <div class="header__account--index">
-                <a href="<?= Url::to(['/login']) ?>" class="header__account-enter" data-for="enter-form">
+                <a href="javascript:void(0)" class="header__account-enter open-modal" data-for="enter-form">
                     <span>Вход</span></a>
                 или
                 <a href="<?= Url::to(['/registration']) ?>" class="header__account-registration">
                     Регистрация
                 </a>
+                <?php if (Yii::$app->session->hasFlash('registerSocial')): ?>
+                    <a href="javascript:void(0)" class="open-modal" id="registerSocial" data-for="auth-form-section"></a>
+                <?php endif; ?>
             </div>
         </div>
     </header>
@@ -168,9 +170,6 @@ $this->title = 'TaskForce';
                     </div>
                 </div>
             </div>
-            <div class="landing-content container">
-                <?= $content ?>
-            </div>
         </div>
     </main>
     <footer class="page-footer">
@@ -217,9 +216,11 @@ $this->title = 'TaskForce';
             </div>
         </div>
     </footer>
+
+    <?= $content ?>
 </div>
 
-<div class="overlay"></div>
+<div class="overlay overlay--show"></div>
 
 <?php $this->endBody() ?>
 </body>

@@ -58,7 +58,7 @@ class RegistrationForm extends Model
         $city = [
             'name' => $this->location,
             'latitude' => $this->latitude,
-            'latitude' => $this->longitude
+            'longitude' => $this->longitude
         ];
 
         return Cities::findCityIdByName($city);

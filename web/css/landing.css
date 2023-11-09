@@ -331,6 +331,16 @@ footer {
 .page-footer__info-use {
   width: 409px; }
 
+.page-footer__info-use a {
+  color: white;
+  text-decoration: none;
+}
+
+.page-footer__info-use a:hover,
+.page-footer__info-use a:focus {
+  text-decoration: underline;
+}
+
 .page-footer__links {
   width: 320px; }
 
@@ -615,7 +625,7 @@ footer {
   padding-bottom: 14px;
   padding-right: 16px;
   padding-left: 16px;
-  margin-bottom: 35px; }
+  margin-bottom: 5px; }
 
 .multiple-select {
   padding-top: 14px;
@@ -2413,6 +2423,10 @@ footer {
   z-index: 29;
   display: none; }
 
+.overlay.overlay--show {
+  display: block;
+}
+
 .form-modal {
   background-color: #ffffff;
   position: fixed;
@@ -2437,7 +2451,9 @@ footer {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    margin: 0; }
+    margin: 0;
+    margin-bottom: 10px;
+  }
   .form-modal .form-modal-description {
     text-transform: uppercase;
     color: rgba(57, 57, 57, 0.86);
@@ -2595,6 +2611,11 @@ footer {
   background-color: #f8d7da;
 }
 
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+
 .mb-3 {
   margin-bottom: 30px !important;
 }
@@ -2625,4 +2646,9 @@ footer {
 
 .social .auth-clients {
   margin: 0;
+}
+
+.landing-tasks {
+  padding: 30px;
+  background-color: white;
 }

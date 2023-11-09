@@ -8,7 +8,7 @@ use yii\helpers\Html;
 /** @var Users $model */
 ?>
 
-<section class="modal enter-form form-modal" id="enter-form">
+<section class="modal form-modal" id="enter-form">
     <h2>Вход на сайт</h2>
     <div class="social">
         <h3>Авторизация через соцсети</h3>
@@ -22,7 +22,6 @@ use yii\helpers\Html;
             'enableAjaxValidation' => true,
             'fieldConfig' => [
                     'options' => [
-//                        'tag' => 'p',
                         'class' => '',
                     ],
                     'template' => "{label}\n{input}\n{error}",
