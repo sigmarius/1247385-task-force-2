@@ -15,6 +15,7 @@ use yii\web\NotFoundHttpException;
  * @property int $worker_price
  * @property string|null $comment
  * @property string $date_created
+ * @property string|null $status
  *
  * @property Tasks $task
  * @property Users $worker

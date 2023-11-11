@@ -8,6 +8,7 @@ use yii\data\ActiveDataProvider;
 use Taskforce\Service\Task\TaskStatuses;
 use yii\db\Query;
 use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
 
 class TasksSearch extends Tasks
 {
@@ -78,8 +79,10 @@ class TasksSearch extends Tasks
 
         $query = Tasks::find()
             ->where(['current_status' => TaskStatuses::STATUS_NEW])
-            ->andWhere(['is', 'location', null])
-            ->orWhere(['in', 'city_id', $currentUser->city_id])
+            ->andWhere(['or',
+                ['is', 'location', null],
+                ['in', 'city_id', $currentUser->city_id]
+            ])
             ->orderBy('published_at DESC');
 
         $dataProvider = new ActiveDataProvider([

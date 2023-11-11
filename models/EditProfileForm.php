@@ -156,7 +156,9 @@ class EditProfileForm extends Model
             $user->telegram = $this->telegram;
             $user->about = $this->about;
 
-            $user->birthdate = \DateTimeImmutable::createFromFormat('d.m.Y', $this->birthdate)->format('Y-m-d H:i:s');
+            if (!empty($this->birthdate)) {
+                $user->birthdate = \DateTimeImmutable::createFromFormat('d.m.Y', $this->birthdate)->format('Y-m-d H:i:s');
+            }
 
             if ($this->upload()) {
                 $user->avatar_id = $this->avatar_id;
