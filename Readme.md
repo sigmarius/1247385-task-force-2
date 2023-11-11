@@ -2,7 +2,7 @@
 
 Сайт функционирует как биржа объявлений, где заказчики — физические лица публикуют задания. Исполнители могут откликаться на эти задания, предлагая свои услуги и стоимость работ.
 
-### Использованы технологии: PHP, Yii2  
+## Использованы технологии: PHP, Yii2  
 RBAC, Faker, Static methods, Basic template, Transactions, CRUD, Migrations, Active Record, Table input, Widgets, Routing, Logging, Transactions, Debug panel, Gii, Helpers, Behaviours, Models, Forms, DataProviders, Sessions, Error handling, Scenarios, Aliases, File uploading, Image thumbnails, Formatter, ListView, API Vk OAuth2 (AuthClient)
 
 #### Сайт реализованного проекта: [TaskForce](https://taskforce.sigmarius.ru/ "Перейти на сайт")  
