@@ -1,13 +1,11 @@
 # Разработка онлайн площадки для поиска исполнителей на разовые задачи на Yii2 (шаблон приложения basic)
-***
 
 Сайт функционирует как биржа объявлений, где заказчики — физические лица публикуют задания. Исполнители могут откликаться на эти задания, предлагая свои услуги и стоимость работ.
 
-### Использованы технологии: PHP, Yii2
+### Использованы технологии: PHP, Yii2  
 RBAC, Faker, Static methods, Basic template, Transactions, CRUD, Migrations, Active Record, Table input, Widgets, Routing, Logging, Transactions, Debug panel, Gii, Helpers, Behaviours, Models, Forms, DataProviders, Sessions, Error handling, Scenarios, Aliases, File uploading, Image thumbnails, Formatter, ListView, API Vk OAuth2 (AuthClient)
 
-***
-#### Сайт реализованного проекта: [TaskForce](https://taskforce.sigmarius.ru/ "Перейти на сайт")
+#### Сайт реализованного проекта: [TaskForce](https://taskforce.sigmarius.ru/ "Перейти на сайт")  
 
 **Тестовый пользователь с ролью Заказчик**   
 _email:_ client@test.ru  
@@ -17,7 +15,7 @@ _password:_ password_client
 _email:_ worker@test.ru  
 _password:_ password_worker
 
-## Что сделано:
+## Что сделано:  
 - Проектирование архитектуры приложения, создание структуры базы данных, описание схемы процессов и классов;
 - С помощью SplFileObject реализован перевод данных из CSV в SQL формат;
 - Интегрирована верстка;
@@ -32,4 +30,4 @@ _password:_ password_worker
 - Проект развернут на поддомене **taskforce.sigmarius.ru**
 
 ***
-*Учебный проект по курсу [PHP. Архитектура сложных веб-сервисов](https://htmlacademy.ru/)*
+*Учебный проект по курсу HTML Academy [PHP. Архитектура сложных веб-сервисов](https://htmlacademy.ru/)*
