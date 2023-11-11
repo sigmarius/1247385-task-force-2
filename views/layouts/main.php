@@ -10,6 +10,7 @@ use app\widgets\Alert;
 use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\helpers\Url;
+use yii\widgets\Menu;
 
 AppAsset::register($this);
 
@@ -35,53 +36,71 @@ $user = Users::findIdentity(\Yii::$app->user->getId());
 <?php $this->beginBody() ?>
 
 <header class="page-header">
-    <nav class="main-nav">
-        <a href='/' class="header-logo">
-            <img class="logo-image" src="/img/logotype.png" width=227 height=60 alt="taskforce">
-        </a>
-        <div class="nav-wrapper">
-            <ul class="nav-list">
-                <li class="list-item list-item--active">
-                    <a class="link link--nav">Новое</a>
-                </li>
-                <li class="list-item">
-                    <a href="<?= Url::to(['/my-task']); ?>" class="link link--nav" >Мои задания</a>
-                </li>
-                <?php if (Yii::$app->user->can('client')): ?>
-                    <li class="list-item">
-                        <a href="<?= Url::to(['/add-task']); ?>" class="link link--nav" >Создать задание</a>
-                    </li>
-                <?php endif; ?>
-                <li class="list-item">
-                    <a href="<?= Url::to(['profile/settings']) ?>" class="link link--nav" >Настройки</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <?php if(!Yii::$app->user->isGuest): ?>
-        <div class="user-block">
-        <a href="#">
-            <img class="user-photo" src="<?= $user->avatarPath; ?>" width="55" height="55" alt="<?= $user->full_name; ?>">
-        </a>
-        <div class="user-menu">
-            <p class="user-name"><?= $user->full_name; ?></p>
-            <div class="popup-head">
-                <ul class="popup-menu">
-                    <li class="menu-item">
-                        <a href="<?= Url::to(['profile/settings']) ?>" class="link">Настройки</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="#" class="link">Связаться с нами</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="<?= Url::to(['tasks/logout']) ?>" class="link">Выход из системы</a>
-                    </li>
+    <?php
+    echo Html::beginTag('nav', ['class' => 'main-nav']);
+        $logoImage = Html::img('@web/img/logotype.png', ['alt' => Yii::$app->name, 'class' => 'logo-image', 'width' => 227, 'height' => 60]);
+        echo Html::a($logoImage, Yii::$app->homeUrl, ['class' => 'header-logo']);
 
-                </ul>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
+        echo Html::beginTag('div', ['class' => 'nav-wrapper']);
+            $menuBar = [
+                [
+                        'label' => 'Новое',
+                        'url' => [Yii::$app->homeUrl],
+                        'active' => get_class(Yii::$app->controller) === \app\controllers\TasksController::class
+                ],
+                [
+                        'label' => 'Мои задания',
+                        'url' => ['/my-task'],
+                        'active' => get_class(Yii::$app->controller) === \app\controllers\MyTaskController::class
+                ],
+            ];
+            if (Yii::$app->user->can('client')) {
+                $menuBar[] = ['label' => 'Создать задание', 'url' => ['add-task/index']];
+            }
+            $menuBar[] = ['label' => 'Настройки', 'url' => ['profile/settings']];
+            echo Menu::widget([
+                'items' => $menuBar,
+                'options' => [
+                    'class' => 'nav-list'
+                ],
+                'itemOptions' => [
+                    'class' => 'list-item'
+                ],
+                'activeCssClass'=>'list-item--active',
+                'linkTemplate' => '<a href="{url}" class="link link--nav">{label}</a>'
+            ]);
+        echo Html::endTag('div');
+    echo Html::endTag('nav');
+
+    if(!Yii::$app->user->isGuest) {
+        echo Html::beginTag('div', ['class' => 'user-block']);
+            $userAvatar = Html::img($user->avatarPath, ['alt' => $user->full_name, 'class' => 'user-photo', 'width' => 55, 'height' => 55]);
+            echo Html::a($userAvatar, ['user/view', 'id' => $user->id]);
+
+            echo Html::beginTag('div', ['class' => 'user-menu']);
+                echo Html::tag('p', $user->full_name, ['class' => 'user-name']);
+
+                echo Html::beginTag('div', ['class' => 'popup-head']);
+                    echo Menu::widget([
+                        'items' => [
+                            ['label' => 'Настройки', 'url' => ['profile/settings']],
+                            ['label' => 'Связаться с нами', 'url' => '#'],
+                            ['label' => 'Выход из системы', 'url' => ['tasks/logout']],
+                        ],
+                        'options' => [
+                            'class' => 'popup-menu'
+                        ],
+                        'itemOptions' => [
+                            'class' => 'menu-item'
+                        ],
+                        'activeCssClass'=>'list-item--active',
+                        'linkTemplate' => '<a href="{url}" class="link">{label}</a>'
+                    ]);
+                echo Html::endTag('div');
+            echo Html::endTag('div');
+        echo Html::endTag('div');
+    }
+    ?>
 </header>
 
 <?= $content ?>

@@ -55,6 +55,9 @@ class TasksSearch extends Tasks
         return Model::scenarios();
     }
 
+    /**
+     * @return string
+     */
     public function calculateTimeDiff()
     {
         $now = new DateTime();
@@ -63,6 +66,11 @@ class TasksSearch extends Tasks
         return $now->format( 'Y-m-d H:i:s');
     }
 
+    /**
+     * @param $params
+     * @param $id
+     * @return ActiveDataProvider
+     */
     public function search($params, $id)
     {
         $currentUserId = \Yii::$app->user->identity->id;
@@ -98,7 +106,7 @@ class TasksSearch extends Tasks
         }
 
         // добавляем полученные из формы категории к запросу
-        $query->orFilterWhere(['in', 'category_id', $this->categories]);
+        $query->andFilterWhere(['in', 'category_id', $this->categories]);
 
         if ($this->hoursPeriod) {
             $query->andFilterWhere(['>=', 'published_at', $this->calculateTimeDiff()]);

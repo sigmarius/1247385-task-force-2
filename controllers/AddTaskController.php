@@ -16,6 +16,12 @@ use Taskforce\Service\Api\Geocoder;
 
 class AddTaskController extends BaseAuthController
 {
+    /**
+     * @param $action
+     * @return bool
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\ForbiddenHttpException
+     */
     public function beforeAction($action)
     {
         if (parent::beforeAction($action)) {

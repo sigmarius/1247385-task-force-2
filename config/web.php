@@ -4,6 +4,7 @@ $db = require __DIR__ . '/db.php';
 
 $config = [
     'id' => 'basic',
+    'name' => 'TaskForce',
     'basePath' => dirname(__DIR__),
     'language' => 'ru-RU',
     'bootstrap' => [
